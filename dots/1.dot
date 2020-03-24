@@ -1,0 +1,12 @@
+strict digraph G {
+    no_a;
+	if;
+	no_b;
+	no_c;
+	final;
+	no_a -> if;
+	if -> no_b;
+	if -> no_c;
+	no_b -> no_c;
+	no_c -> final;
+}
