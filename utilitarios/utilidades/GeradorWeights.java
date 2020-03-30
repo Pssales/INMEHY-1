@@ -13,11 +13,11 @@ public class GeradorWeights {
 	public static void main(String args[]) throws IOException{
 		
 		
-		int populationSize = 50;
+		int populationSize = 1000;
 		int dimension = 2;
 		double epsilon = 1.0;
-		//String caminho = "/home/camila/eclipse-workspace/jMetal-master/jmetal-algorithm/target/classes/mombi2-weights/weight/weight_02D_"+populationSize+"_mombi.sld";
-		String caminho = "/home/camila/eclipse-workspace/jMetal-master/resources/weightVectorFiles/mombi2/weight_02D_"+populationSize+"_mombi.sld";
+		String caminho = "C:\\Users\\camil\\eclipse-workspace\\jMetal\\resources\\weightVectorFiles\\mombi2\\weight_02D_"+populationSize+"_mombi.sld";
+		
 		Impressora.getInstance().imprimirArquivo(caminho,"# "+populationSize+" "+dimension+"\n");
 		
 		System.out.println("GERADOR DE VETOR DE PESOS PARA O MOMBI");

@@ -45,7 +45,7 @@ public class executar {
 	private static String cfgProp = "C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\config.properties"; // graphviz
 	private static String TEMP_DIR = "C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\temp"; //  graphviz
 	
-	private static int estudos_caso = 1; // referente a pasta arquivos para leitura. são os dots. uma pasta por dot 
+	private static int estudos_caso =2; // referente a pasta arquivos para leitura. são os dots. uma pasta por dot 
 	private static int maxTrials = 30;
 
 	//arquivos
@@ -62,7 +62,8 @@ public class executar {
 	private static double crossoverProbability = 0.9;
 	private static double mutationProbability = 0.0125;
 	private static int numberValidations = 2000;  //////// esse e o unico que muda;
-	private static String weight_path = "C:\\Users\\camil\\eclipse-workspace\\jMetal-master\\resources\\weightVectorFiles\\mombi2\\weight_02D_100_mombi.sld";
+	private static int numberArchievment = 1000;
+	private static String weight_path = "C:\\Users\\camil\\eclipse-workspace\\jMetal\\resources\\weightVectorFiles\\mombi2\\weight_02D_1000_mombi.sld";
 	////////////////////////////////
 	
 
@@ -70,7 +71,8 @@ public class executar {
 	private static List<List<IntegerSolution>> allpopNSGAIII = new ArrayList<List<IntegerSolution>>();
 	private static List<List<IntegerSolution>> allpopMOMBI = new ArrayList<List<IntegerSolution>>();
 	private static List<List<IntegerSolution>> allpopIBEA = new ArrayList<List<IntegerSolution>>();
-	
+	private static List<IntegerSolution> pfTrueKnown = new ArrayList<IntegerSolution>();
+
 	private static List<IntegerSolution> popNSGAFinal = new ArrayList();
 	private static List<IntegerSolution> popNSGAIIIFinal = new ArrayList<>();
 	private static List<IntegerSolution> popMOMBIFinal = new ArrayList<>();
@@ -88,11 +90,11 @@ public class executar {
 			FrontNormalizer frontNormalizer = new FrontNormalizer(referenceFront);
 			Front normalizedReferenceFront = frontNormalizer.normalize(referenceFront); 
 			
-			System.out.println("#Integer Problem - teste de interface..." + ec);
+			System.out.println("#Integer Problem - teste..." + ec);
 			
 			Problem<IntegerSolution> problem = new Camila_problema(caminho_projeto+"dots\\"+ec+".dot");
 
-			//System.out.println("Rodando algoritmos nativos...");
+			System.out.println("Rodando algoritmos nativos...");
 
 
 			for(int trial = 0; trial < maxTrials; trial++){
@@ -101,7 +103,7 @@ public class executar {
 				try {
 					Saida popNSGAIII_nativo = nsgaiii_nativo.execute();							   
 					List<IntegerSolution> popnd = SolutionListUtils.getNondominatedSolutions(popNSGAIII_nativo.getPopulacao_final());
-					allpopNSGAIII.add(popnd); // terah as 30 pops do NSGA-II
+					allpopNSGAIII.add(popnd); // terah as 30 pops do NSGA-III
 					nsgaiii_nativo.limparPopulacao();
 					
 				} catch (Exception eee) {
@@ -111,12 +113,67 @@ public class executar {
 			} // #### END 30 TRIAL NSGA-II
 
 			System.out.println("NSGAIII Nativo finalizado");   
-//			
+			
+//			----------------------------------------------------------
+			for(int trial = 0; trial < maxTrials; trial++){
+
+				IBEA_LLH_IntegerProblem ibea_nativo = new IBEA_LLH_IntegerProblem(problem, populationSize, crossoverProbability, mutationProbability, operador_crossover, operador_mutacao, numberValidations, numberArchievment);
+				try {
+					Saida popIBEA_nativo = ibea_nativo.execute();							   
+					List<IntegerSolution> popnd = SolutionListUtils.getNondominatedSolutions(popIBEA_nativo.getPopulacao_final());
+					allpopIBEA.add(popnd); // terah as 30 pops do NSGA-II
+					pfTrueKnown.addAll(popnd); // para gerar a PFTrueKnown 
+				} catch (Exception eee) {
+					eee.printStackTrace();
+				}
+
+			} // #### END 30 TRIAL NSGA-II
+
+			System.out.println("IBEA Nativo finalizado");  
+			
+//			-----------------------------------------------------------
+			
+			for(int trial = 0; trial < maxTrials; trial++){
+				MOMBI_LLH_IntegerProblem mombi_nativo = new MOMBI_LLH_IntegerProblem(problem, crossoverProbability, mutationProbability, operador_crossover, operador_mutacao, (numberValidations/populationSize), weight_path);
+				try {
+					Saida popMOMBI_nativo = mombi_nativo.execute();		   
+					List<IntegerSolution> popnd= SolutionListUtils.getNondominatedSolutions(popMOMBI_nativo.getPopulacao_final());
+					allpopMOMBI.add(popnd); // terah as 30 pops do NSGA-II
+					pfTrueKnown.addAll(popnd); // para gerar a PFTrueKnown   
+				} catch (Exception eee) {
+					eee.printStackTrace();
+				}
+			} // #### END 30 TRIAL NSGA-II
+			
+			System.out.println("MOMBI Nativo finalizado");    
+			
+//			-----------------------------------------------------------
+//			Indicadores
+//			-----------------------------------------------------------
+
+			List<IntegerSolution> popIBEAFinal = new ArrayList<>();
+			for(List<IntegerSolution> pop : allpopIBEA){  
+				popIBEAFinal.addAll(pop);
+			}
+
+			Front normalizedFrontIBEA = frontNormalizer.normalize(new ArrayFront(popIBEAFinal)) ;
+			List<PointSolution> normalizedPopulationIBEA = FrontUtils
+					.convertFrontToSolutionList(normalizedFrontIBEA) ;
+			
+//			-----------------------------------------------------------			
+			
+			List<IntegerSolution> popMOMBIFinal = new ArrayList<>();
+			for(List<IntegerSolution> pop : allpopMOMBI){  
+				popMOMBIFinal.addAll(pop);
+			}
+			Front normalizedFrontMOMBI = frontNormalizer.normalize(new ArrayFront(popMOMBIFinal)) ;
+			List<PointSolution> normalizedPopulationMOMBI = FrontUtils
+					.convertFrontToSolutionList(normalizedFrontMOMBI) ;
+//			-----------------------------------------------------------
+			
 			for(List<IntegerSolution> pop : allpopNSGAIII){  
 				popNSGAIIIFinal.addAll(pop);
 			}
-			//allpopIBEA.clear();
-			//allpopIBEA.add(popIBEAFinal);
 			Front normalizedFrontNSGAIII = frontNormalizer.normalize(new ArrayFront(popNSGAIIIFinal)) ;
 			List<PointSolution> normalizedPopulationNSGAIII = FrontUtils
 					.convertFrontToSolutionList(normalizedFrontNSGAIII) ;
@@ -126,21 +183,33 @@ public class executar {
 			String result_eps_nsgaiii = new Epsilon<PointSolution>(normalizedReferenceFront).evaluateModificado(popNSGAIIIFinal) + " ";
 			String result_igd_nsgaiii = new InvertedGenerationalDistancePlus<PointSolution>(normalizedReferenceFront).evaluateModificado(normalizedPopulationNSGAIII) + "";
 
+
+			String result_hyp_ibea = new PISAHypervolume<PointSolution>(normalizedReferenceFront).evaluateModificado(normalizedPopulationIBEA) + "";
+			String result_eps_ibea = new Epsilon<PointSolution>(normalizedReferenceFront).evaluateModificado(popIBEAFinal) + " ";
+			String result_igd_ibea = new InvertedGenerationalDistancePlus<PointSolution>(normalizedReferenceFront).evaluateModificado(normalizedPopulationIBEA) + "";
+
+
+			String result_hyp_mombi = new PISAHypervolume<PointSolution>(normalizedReferenceFront).evaluateModificado(normalizedPopulationMOMBI) + "";
+			String result_eps_mombi = new Epsilon<PointSolution>(normalizedReferenceFront).evaluateModificado(popMOMBIFinal) + " ";
+			String result_igd_mombi = new InvertedGenerationalDistancePlus<PointSolution>(normalizedReferenceFront).evaluateModificado(normalizedPopulationMOMBI) + "";
+
+			
 			List<String[]> linhas = new ArrayList<>();
 			linhas.add(new String[]{(ec+""), "NSGA-III", result_hyp_nsgaiii, result_eps_nsgaiii, result_igd_nsgaiii});
+			linhas.add(new String[]{(ec+""), "IBEA", result_hyp_ibea, result_eps_ibea, result_igd_ibea});
+			linhas.add(new String[]{(ec+""), "MOMBI", result_hyp_mombi, result_eps_mombi, result_igd_mombi});
 
 			Writer writer = Files.newBufferedWriter(Paths.get("C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\files\\resultados.csv"), StandardOpenOption.APPEND);
 			CSVWriter csvWriter = new CSVWriter(writer, '\t'); 
 
-			//csvWriter.writeNext(cabecalho);
 			csvWriter.writeAll(linhas);
-//
+
 			csvWriter.flush();
 			writer.close();
 			System.out.println("NSGA-III: "+result_hyp_nsgaiii);
 
 			
-			System.out.println("-----------------");
+			System.out.println("------------------------------------------");
 		
 		}
 		System.out.println("Fim");

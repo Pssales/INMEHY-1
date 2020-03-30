@@ -93,6 +93,7 @@ public class auxFronteiraPareto {
 		} 
 **/
 		for(int trial = 0; trial < maxTrials; trial++){
+			System.out.println("NSGA III" + trial);
 			NSGAIII_LLH_IntegerProblem nsgaiii_nativo = new NSGAIII_LLH_IntegerProblem(problem, populationSize, crossoverProbability, mutationProbability, operador_crossover, operador_mutacao, numberValidations);
 			try {
 				Saida popNSGAIII_nativo = nsgaiii_nativo.execute();						   
@@ -122,11 +123,13 @@ public class auxFronteiraPareto {
 		}
 **/
 		pfTrueKnown = (ArrayList<IntegerSolution>) SolutionListUtils.getNondominatedSolutions(pfTrueKnown);
-
+		String fronteira = "";
 		for(IntegerSolution elemento : pfTrueKnown){
-			String s = elemento.getObjective(0) + " " + elemento.getObjective(1)+"\n";
-			Impressora.getInstance().imprimirArquivo((caminho_saida), s);	
+			if(!fronteira.contains(elemento.getObjective(0) + " " + elemento.getObjective(1))) {
+				fronteira = fronteira + elemento.getObjective(0) + " " + elemento.getObjective(1)+"\n";	
+			}
 		}
+		Impressora.getInstance().imprimirArquivo((caminho_saida), fronteira);
 
 	}
 
