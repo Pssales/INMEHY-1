@@ -31,22 +31,23 @@ import java.io.*;
 public class Camila_problema extends AbstractIntegerProblem {
 
 	private int numero_nos ;
-	private int tamanho_cromossomo = 800;
+	private int tamanho_cromossomo = 1000;
 	private int [][] matriz_adjacencia ;
 	private Dicionario dicionario; 
-	
+	private int numero_arestas=0;
+
 
 
 	public Camila_problema(String caminho_dot) throws IOException {
 
 
-		
+
 		dicionario = new Dicionario();
 		int nos = 0;
 
 		// primeira parte é fazer o dicionario
 		try {
-//			stripDuplicatesFromFile(caminho_dot);
+			//			stripDuplicatesFromFile(caminho_dot);
 			FileReader arq = new FileReader(caminho_dot);
 			BufferedReader lerArq = new BufferedReader(arq);
 
@@ -100,8 +101,9 @@ public class Camila_problema extends AbstractIntegerProblem {
 				int id_componente_1 = 0;
 				int id_componente_2 = 0;
 				int conta_componentes = 0;
-
+				
 				if(linha.contains("->")){
+					numero_arestas = numero_arestas + 1;
 					for(String palavra : linha.split("->")) {
 
 						String aux = palavra.replace("\t", "").replace(" ", "").replace(";", "");
@@ -110,20 +112,19 @@ public class Camila_problema extends AbstractIntegerProblem {
 							id_componente_1 = dicionario.buscar_a_partir_do_valor(aux);
 
 							conta_componentes = conta_componentes + 1;
-						//	System.out.println("componente 1 "+ id_componente_1);
+							//	System.out.println("componente 1 "+ id_componente_1);
 							continue;
-							
+
 						}
 
 						if(conta_componentes==1) {
-							
-							id_componente_2 = dicionario.buscar_a_partir_do_valor(aux);
-						//	System.out.println("componente 2 "+ id_componente_2+ " " + aux);
-							if(aux.contains("final")){ //substitui pelo temrinal
 
+							id_componente_2 = dicionario.buscar_a_partir_do_valor(aux);
+							//	System.out.println("componente 2 "+ id_componente_2+ " " + aux);
+							if(aux.contains("final")){ //substitui pelo temrinal
 								matriz_adjacencia[id_componente_1][id_componente_2] = -1;
 							} else {
-								if(dicionario.buscar_a_partir_da_chave(id_componente_1).contains("if_")) {
+								if(dicionario.buscar_a_partir_da_chave(id_componente_1).contains("if_") || dicionario.buscar_a_partir_da_chave(id_componente_1).contains("else_") || dicionario.buscar_a_partir_da_chave(id_componente_1).contains("switch_") || dicionario.buscar_a_partir_da_chave(id_componente_1).contains("while_") || dicionario.buscar_a_partir_da_chave(id_componente_1).contains("case_")) {
 									matriz_adjacencia[id_componente_1][id_componente_2] = 2;
 
 								}else {
@@ -151,16 +152,16 @@ public class Camila_problema extends AbstractIntegerProblem {
 
 
 		// lendo a matriz gerada
-//		for(i=0; i<nos; i++){
-//			for(j=0; j<nos; j++){
-//				System.out.print(matriz_adjacencia[i][j]+" ");
-//			}
-//			System.out.println("");
-//		}
+//				for(i=0; i<nos; i++){
+//					for(j=0; j<nos; j++){
+//						System.out.print(matriz_adjacencia[i][j]+" ");
+//					}
+//					System.out.println("");
+//				}
 
 		numero_nos = nos;
 		setNumberOfVariables(tamanho_cromossomo); // seta o tamanho do cromossomo
-		setNumberOfObjectives(2);
+		setNumberOfObjectives(3);
 		setName("Camilanator");
 
 		List<Integer> lowerLimit = new ArrayList<>(getNumberOfVariables()) ;
@@ -176,116 +177,74 @@ public class Camila_problema extends AbstractIntegerProblem {
 
 
 	public void evaluate(IntegerSolution solution){
-		//		for (int i = 0; i < matriz_adjacencia.length; i++) {
-		//			System.out.println("sdsd");
-		//		}
 
-		int quantidade_repetidas = 0;
-		int quantidade_coerencia = 0;
-		double fitness1, fitness2;
+		int custo = 0;
+		int quantidade_coerencia = 1;
+		int arestasCobertas = 0;
+		double fitness1, fitness2, fitness3;
+		
 		fitness1 = 1.0;
 		fitness2 = 1.0;
+		fitness3 = 1.0;
+//		------------------------------coerencia--------------------------------------------------
 
-		////// verificação se existe ou valores repetidos no cromossomo
-
-
-
-
-
-		
-		
-		// cobertura
-		int faz_sequencia = 1;
-		
 		int j = 0;
 		for(int i=0; i<tamanho_cromossomo-1; i++) {
 			j = j + 1;
 			int elemento = solution.getVariableValue(i);
 			int elemento_prox = solution.getVariableValue(j);
 			if(matriz_adjacencia[elemento][elemento_prox]!=0) {
-				faz_sequencia = faz_sequencia + 1;
+				quantidade_coerencia = quantidade_coerencia + 1;
 			}
 
 		}
-	
+//		System.out.print("func1: "+quantidade_coerencia);
+		fitness1 = 1/(Math.sqrt(quantidade_coerencia));
+//		fitness1 = fitness1 + (1/quantidade_coerencia);
 
-	fitness1 = 1/(Math.sqrt(faz_sequencia));
 
-	
-	//custo
-	j = 0;
-	faz_sequencia = 1;
-	for(int i=0; i<tamanho_cromossomo-1; i++) {
-		j = j + 1;
-		int elemento = solution.getVariableValue(i);
-		int elemento_prox = solution.getVariableValue(j);
-		if(matriz_adjacencia[elemento][elemento_prox]!=0) {
-			faz_sequencia = faz_sequencia + matriz_adjacencia[elemento][elemento_prox];
+
+//		------------------------------custo--------------------------------------------------
+		j = 0;
+		for(int i=0; i<tamanho_cromossomo-1; i++) {
+			j = j + 1;
+			int elemento = solution.getVariableValue(i);
+			int elemento_prox = solution.getVariableValue(j);
+			if(matriz_adjacencia[elemento][elemento_prox]!=0) {
+				custo = custo + matriz_adjacencia[elemento][elemento_prox];
+			}
+
 		}
+//		System.out.print(" func2: "+faz_sequencia);
+		fitness2 = 1/(Math.sqrt(custo));
+//		fitness2 = (1/faz_sequencia);
+			
+		
+//		------------------------------Cobertura--------------------------------------------------
+		
+		for (int i = 0; i < matriz_adjacencia.length; i++) {
+			for (int k = 0; k < matriz_adjacencia.length; k++) {
+				for(int l=0; l<solution.getNumberOfVariables()-1; l++) {
+					if(matriz_adjacencia[i][k] != 0 && i==solution.getVariableValue(l) && k==solution.getVariableValue(l+1)) {
+						arestasCobertas= arestasCobertas+1;
+						break;
+					}
+				}
+			}
+		}
+		
+			
+		fitness3 = 1 -(arestasCobertas/numero_arestas);
+			
+		solution.setObjective(0, fitness1);
+		solution.setObjective(1, fitness2);
+		solution.setObjective(2, fitness3);
+//		System.out.print(" func1: "+fitness1);
+//		System.out.print(" func2: "+fitness2);
+//		System.out.print(" func3: "+fitness3);
+//		System.out.println();
 
 	}
-	
-	
-	
-	fitness2 = 1/(Math.sqrt(faz_sequencia));
-	//System.out.println(fitness1 + " " + fitness2);
-	
-	
-	solution.setObjective(0, fitness1);
-	solution.setObjective(1, fitness2);
-	
-	
-
-
-
-}
-
-
-private int getQuantidade_repetidas() {
-	return 13;
-}
-
-private int getQuantidade_coerencia() {
-
-	return 200;
-}
-
-private int getQuantidade_atributos() {
-
-	/// fazer um metodo que le o código fonte de cada estudo de caso e descobre a quantidade de atributos
-	// retorno quantidade de atributos
-
-	Random gerador = new Random();
-	return gerador.nextInt(26);
-
-
-}
-
-private int getQuantidade_metodos() {
-
-	/// fazer um metodo que le o código fonte de cada estudo de caso e descobre a quantidade de metodos
-	// retorno quantidade de metodos
-	Random gerador = new Random();
-	return gerador.nextInt(26);
-}
-
-
-public void stripDuplicatesFromFile(String filename) throws IOException {
-	 String input = null;
-     //Instantiating the Scanner class
-     Scanner sc = new Scanner(new File(filename));
-     //Instantiating the FileWriter class
-     FileWriter writer = new FileWriter(filename);
-     //Instantiating the Set class
-     Set set = new HashSet();
-     while (sc.hasNextLine()) {
-        input = sc.nextLine();
-        if(set.add(input)) {
-           writer.append(input+"\n");
-        }
-     }
-     writer.flush();
-}
 
 
 }

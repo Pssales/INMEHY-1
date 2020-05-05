@@ -9,7 +9,7 @@ public class geradorFronteiraPareto {
 		auxFronteiraPareto pf = new auxFronteiraPareto();
 		
 		for(int i=1; i<=2; i++) {
-			pf.gerarFPFinal(i, 60);
+			pf.gerarFPFinal(i, 10);
 		}
 	}
 }

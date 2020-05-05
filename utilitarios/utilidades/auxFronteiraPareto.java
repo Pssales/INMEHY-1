@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-
+import algoritmos_evolucionarios.IBEA_LLH_IntegerProblem;
 import algoritmos_evolucionarios.MOMBI_LLH_IntegerProblem;
 import algoritmos_evolucionarios.NSGAIII_LLH_IntegerProblem;
 import algoritmos_evolucionarios.NSGAII_LLH_IntegerProblem;
@@ -18,11 +18,11 @@ import utilidades.Impressora;
 
 public class auxFronteiraPareto {
 
-	//private List<List<IntegerSolution>> allpopNSGAII;
 	private List<List<IntegerSolution>> allpopNSGAIII;
-	//private List<List<IntegerSolution>> allpopMOMBI;
+	private List<List<IntegerSolution>> allpopMOMBI;
+	private List<List<IntegerSolution>> allpopIBEA;
 	private ArrayList<IntegerSolution> pfTrueKnown;
-	//private List<IntegerSolution> popMOMBI;
+	private List<IntegerSolution> popMOMBI;
 
 	private int estudo_caso;
 	private int trials;
@@ -32,19 +32,20 @@ public class auxFronteiraPareto {
 	private int operador_crossover = 1;
 	private int operador_mutacao = 1;
 	private double crossoverProbability = 0.9;
-	private double mutationProbability = 0.00125;
-	private int numberValidations = 300;  //////// esse e o unico que muda;
-	//private String weight_path = "C:\\Users\\camil\\eclipse-workspace\\jMetal-master\\resources\\weightVectorFiles\\mombi2\\weight_02D_100_mombi.sld";
+	private double mutationProbability = 0.0125;
+	private int numberValidations = 1000;  //////// esse e o unico que muda;
+	private String weight_path = "C:\\Users\\camil\\eclipse-workspace\\jMetal\\resources\\weightVectorFiles\\mombi2\\weight_03D_12.sld";
 	private static String caminho_projeto = "C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\";
-	
+	private static int numberArchievment = 100;
+
 
 	public auxFronteiraPareto() {
 
-		//allpopNSGAII = new ArrayList<List<IntegerSolution>>();
 		allpopNSGAIII = new ArrayList<List<IntegerSolution>>();
-		//allpopMOMBI = new ArrayList<List<IntegerSolution>>();
+		allpopMOMBI = new ArrayList<List<IntegerSolution>>();
+		allpopIBEA = new ArrayList<List<IntegerSolution>>();
 		pfTrueKnown = new ArrayList<IntegerSolution>();		
-//		popMOMBI = new LinkedList<IntegerSolution>();
+		popMOMBI = new LinkedList<IntegerSolution>();
 
 	}
 
@@ -57,8 +58,6 @@ public class auxFronteiraPareto {
 		this.estudo_caso = e;
 		this.trials = t;
 		this.caminho_saida = "pareto_fronts\\fronteira_pareto_"+estudo_caso+".pf";
-
-
 
 		for(int i=0; i<trials; i++) {
 			this.gerarFronteiraParetoUnitaria();
@@ -76,57 +75,58 @@ public class auxFronteiraPareto {
 
 		System.out.println("Executando...");
 
-/**
-	
 		for(int trial = 0; trial < maxTrials; trial++){
-			NSGAII_LLH_IntegerProblem nsga_nativo = new NSGAII_LLH_IntegerProblem(problem, populationSize, crossoverProbability, mutationProbability, operador_crossover, operador_mutacao, numberValidations);
-			try {
-				Saida popNSGA_nativo = nsga_nativo.execute();					   
-				List<IntegerSolution> popnd = SolutionListUtils.getNondominatedSolutions(popNSGA_nativo.getPopulacao_final());
-				allpopNSGAII.add(popnd); 
-				pfTrueKnown.addAll(popnd); 
-				System.out.println(trial + " NSGA-II " ); 
-			} catch (Exception eee) {
-				eee.printStackTrace();
-			}
-
-		} 
-**/
-		for(int trial = 0; trial < maxTrials; trial++){
-			System.out.println("NSGA III" + trial);
 			NSGAIII_LLH_IntegerProblem nsgaiii_nativo = new NSGAIII_LLH_IntegerProblem(problem, populationSize, crossoverProbability, mutationProbability, operador_crossover, operador_mutacao, numberValidations);
 			try {
 				Saida popNSGAIII_nativo = nsgaiii_nativo.execute();						   
 				List<IntegerSolution> popnd = SolutionListUtils.getNondominatedSolutions(popNSGAIII_nativo.getPopulacao_final());
 				allpopNSGAIII.add(popnd); 
 				pfTrueKnown.addAll(popnd); 
-				System.out.println(trial + " NSGAIII" );   
 			} catch (Exception eee) {
 				eee.printStackTrace();
 			}
 
 		} 
+		System.out.println("NSGAIII");
 
-	/**	
 		for(int trial = 0; trial < maxTrials; trial++){
-			MOMBI_LLH_IntegerProblem mombi_nativo = new MOMBI_LLH_IntegerProblem(problem, crossoverProbability, mutationProbability, operador_crossover, operador_mutacao, (numberValidations/populationSize), weight_path);
+			MOMBI_LLH_IntegerProblem mombi_nativo = new MOMBI_LLH_IntegerProblem(problem, crossoverProbability, mutationProbability, operador_crossover, operador_mutacao, numberValidations, weight_path);
 			try {
 				Saida popMOMBI_nativo = mombi_nativo.execute();						   
 				popMOMBI = SolutionListUtils.getNondominatedSolutions(popMOMBI_nativo.getPopulacao_final());
 				allpopMOMBI.add(popMOMBI); 
 				pfTrueKnown.addAll(popMOMBI);
-				System.out.println(trial + " MOMBI");       
 			} catch (Exception eee) {
 				eee.printStackTrace();
 			}
 
 		}
-**/
+		
+		System.out.println("MOMBI");
+
+		
+		for(int trial = 0; trial < maxTrials; trial++){
+
+			IBEA_LLH_IntegerProblem ibea_nativo = new IBEA_LLH_IntegerProblem(problem, populationSize, crossoverProbability, mutationProbability, operador_crossover, operador_mutacao, numberValidations*populationSize, numberArchievment);
+			try {
+				Saida popIBEA_nativo = ibea_nativo.execute();							   
+				List<IntegerSolution> popnd = SolutionListUtils.getNondominatedSolutions(popIBEA_nativo.getPopulacao_final());
+				allpopIBEA.add(popnd); // terah as 30 pops do NSGA-II
+				pfTrueKnown.addAll(popnd); // para gerar a PFTrueKnown 
+			} catch (Exception eee) {
+				eee.printStackTrace();
+			}
+
+		} 
+		System.out.println("IBEA");
+
+		
+
 		pfTrueKnown = (ArrayList<IntegerSolution>) SolutionListUtils.getNondominatedSolutions(pfTrueKnown);
 		String fronteira = "";
 		for(IntegerSolution elemento : pfTrueKnown){
-			if(!fronteira.contains(elemento.getObjective(0) + " " + elemento.getObjective(1))) {
-				fronteira = fronteira + elemento.getObjective(0) + " " + elemento.getObjective(1)+"\n";	
+			if(!fronteira.contains(elemento.getObjective(0) + " " + elemento.getObjective(1)+ " " +elemento.getObjective(2))) {
+				fronteira = fronteira + elemento.getObjective(0) + " " + elemento.getObjective(1)+ " " +elemento.getObjective(2)+"\n";	
 			}
 		}
 		Impressora.getInstance().imprimirArquivo((caminho_saida), fronteira);
@@ -135,13 +135,11 @@ public class auxFronteiraPareto {
 
 	private void limparTudo() {
 
-	//	allpopNSGAII.clear();
 		allpopNSGAIII.clear();
-		//allpopMOMBI.clear(); 
-		//popMOMBI.clear();
+		allpopMOMBI.clear(); 
+		popMOMBI.clear();
+		allpopIBEA.clear();
 		pfTrueKnown.clear();
-
-
 
 	}
 }

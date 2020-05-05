@@ -13,7 +13,7 @@ public class GeradorWeights {
 	public static void main(String args[]) throws IOException{
 		
 		
-		int populationSize = 1000;
+		int populationSize = 2000;
 		int dimension = 2;
 		double epsilon = 1.0;
 		String caminho = "C:\\Users\\camil\\eclipse-workspace\\jMetal\\resources\\weightVectorFiles\\mombi2\\weight_02D_"+populationSize+"_mombi.sld";
