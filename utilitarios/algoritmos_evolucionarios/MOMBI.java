@@ -7,19 +7,16 @@ import java.util.Comparator;
 import java.util.List;
 
 import dependencias_abstract.AbstractUtilityFunctionsSet;
-import dependencias_interfaces.Algorithm;
 import dependencias_interfaces.CrossoverOperator;
 import dependencias_interfaces.MutationOperator;
 import dependencias_interfaces.Problem;
 import dependencias_interfaces.SelectionOperator;
 import dependencias_interfaces.Solution;
 import dependencias_interfaces.SolutionListEvaluator;
-import dependencias_class.DominanceComparator;
-import dependencias_class.Fitness;
+
 import dependencias_class.R2Ranking;
 import dependencias_class.R2RankingAttribute;
 import dependencias_class.R2SolutionData;
-import dependencias_class.SolutionListUtils;
 import dependencias_class.TchebycheffUtilityFunctionsSet;
 
 

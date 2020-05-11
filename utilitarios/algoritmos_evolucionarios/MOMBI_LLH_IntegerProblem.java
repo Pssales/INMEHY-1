@@ -35,7 +35,7 @@ import java.util.List;
  */
 public class MOMBI_LLH_IntegerProblem extends AbstractAlgorithmRunner {
   
-	private Problem<IntegerSolution> problem;
+	 private Problem<IntegerSolution> problem;
 	 private Algorithm<List<IntegerSolution>> algorithm;
 	 private CrossoverOperator<IntegerSolution> crossover;
 	 private MutationOperator<IntegerSolution>  mutation;

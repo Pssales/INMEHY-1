@@ -12,6 +12,7 @@ import com.opencsv.CSVWriter;
 
 import algoritmos_evolucionarios.IBEA_LLH_IntegerProblem;
 import algoritmos_evolucionarios.MOMBI_LLH_IntegerProblem;
+import algoritmos_evolucionarios.mombi.MOMBI2_LLH_IntegerProblem;
 import algoritmos_evolucionarios.NSGAIII_LLH_IntegerProblem;
 import dependencias_class.ArrayFront;
 import dependencias_class.Epsilon;
@@ -35,7 +36,7 @@ public class executar {
 	private static String cfgProp = "C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\config.properties"; // graphviz
 	private static String TEMP_DIR = "C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\temp"; //  graphviz
 	
-	private static int estudos_caso =2; // referente a pasta arquivos para leitura. são os dots. uma pasta por dot 
+	private static int estudos_caso =1; // referente a pasta arquivos para leitura. são os dots. uma pasta por dot 
 	private static int maxTrials = 30;
 
 	//arquivos
@@ -48,18 +49,20 @@ public class executar {
 	private static int operador_mutacao = 1;
 	private static double crossoverProbability = 0.9;
 	private static double mutationProbability = 0.0125;
-	private static int numberValidations = 1000;  //////// esse e o unico que muda;
+	private static int numberValidations = 1100;  //////// esse e o unico que muda;
 	private static int numberArchievment = 100;
 	private static String weight_path = "C:\\Users\\camil\\eclipse-workspace\\jMetal\\resources\\weightVectorFiles\\mombi2\\weight_03D_12.sld";
 	////////////////////////////////
 		
 	private static List<List<IntegerSolution>> allpopNSGAIII = new ArrayList<List<IntegerSolution>>();
 	private static List<List<IntegerSolution>> allpopMOMBI = new ArrayList<List<IntegerSolution>>();
+	private static List<List<IntegerSolution>> allpopMOMBI2 = new ArrayList<List<IntegerSolution>>();
 	private static List<List<IntegerSolution>> allpopIBEA = new ArrayList<List<IntegerSolution>>();
 	private static List<IntegerSolution> pfTrueKnown = new ArrayList<IntegerSolution>();
 	
 	private static List<IntegerSolution> popNSGAIIIFinal = new ArrayList<>();
 	private static List<IntegerSolution> popMOMBIFinal = new ArrayList<>();
+	private static List<IntegerSolution> popMOMBI2Final = new ArrayList<>();
 	private static List<IntegerSolution> popIBEAFinal = new ArrayList<>();
 	
 	
@@ -67,7 +70,7 @@ public class executar {
 	public static void main(String[] args) throws IOException{
 
 		
-		for(int ec=2; ec<=estudos_caso; ec++){
+		for(int ec=1; ec<=estudos_caso; ec++){
 			
 			String referenceParetoFront = "C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\pareto_fronts\\fronteira_pareto_"+ec+".pf";
 			Front referenceFront = new ArrayFront(referenceParetoFront); 
@@ -79,7 +82,6 @@ public class executar {
 			Problem<IntegerSolution> problem = new Camila_problema(caminho_projeto+"dots\\"+ec+".dot");
 
 			System.out.println("Rodando algoritmos nativos...");
-
 
 			for(int trial = 0; trial < maxTrials; trial++){
 
@@ -132,6 +134,22 @@ public class executar {
 			System.out.println("MOMBI Nativo finalizado");    
 			
 //			-----------------------------------------------------------
+			
+			for(int trial = 0; trial < maxTrials; trial++){
+				MOMBI2_LLH_IntegerProblem mombi2_nativo = new MOMBI2_LLH_IntegerProblem(problem, crossoverProbability, mutationProbability, operador_crossover, operador_mutacao, numberValidations, weight_path);
+				try {
+					Saida popMOMBI2_nativo = mombi2_nativo.execute();		   
+					List<IntegerSolution> popnd= SolutionListUtils.getNondominatedSolutions(popMOMBI2_nativo.getPopulacao_final());
+					allpopMOMBI2.add(popnd); // terah as 30 pops do NSGA-II
+					pfTrueKnown.addAll(popnd); // para gerar a PFTrueKnown   
+				} catch (Exception eee) {
+					eee.printStackTrace();
+				}
+			} // #### END 30 TRIAL NSGA-II
+			
+			System.out.println("MOMBI II Nativo finalizado"); 
+			
+//			-----------------------------------------------------------
 //			Indicadores
 //			-----------------------------------------------------------
 
@@ -151,6 +169,14 @@ public class executar {
 			Front normalizedFrontMOMBI = frontNormalizer.normalize(new ArrayFront(popMOMBIFinal)) ;
 			List<PointSolution> normalizedPopulationMOMBI = FrontUtils
 					.convertFrontToSolutionList(normalizedFrontMOMBI) ;
+//			-----------------------------------------------------------			
+			
+			for(List<IntegerSolution> pop : allpopMOMBI2){  
+				popMOMBI2Final.addAll(pop);
+			}
+			Front normalizedFrontMOMBI2 = frontNormalizer.normalize(new ArrayFront(popMOMBI2Final)) ;
+			List<PointSolution> normalizedPopulationMOMBI2 = FrontUtils
+					.convertFrontToSolutionList(normalizedFrontMOMBI2) ;
 //			-----------------------------------------------------------
 			
 			for(List<IntegerSolution> pop : allpopNSGAIII){  
@@ -175,11 +201,16 @@ public class executar {
 			String result_eps_mombi = new Epsilon<PointSolution>(referenceFront).evaluateModificado(popMOMBIFinal) + " ";
 			String result_igd_mombi = new InvertedGenerationalDistancePlus<PointSolution>(normalizedReferenceFront).evaluateModificado(normalizedPopulationMOMBI) + "";
 
-			
+			String result_hyp_mombi2 = new PISAHypervolume<PointSolution>(normalizedReferenceFront).evaluateModificado(normalizedPopulationMOMBI2) + "";
+			String result_eps_mombi2 = new Epsilon<PointSolution>(referenceFront).evaluateModificado(popMOMBI2Final) + " ";
+			String result_igd_mombi2 = new InvertedGenerationalDistancePlus<PointSolution>(normalizedReferenceFront).evaluateModificado(normalizedPopulationMOMBI2) + "";
+
 			List<String[]> linhas = new ArrayList<>();
 			linhas.add(new String[]{(ec+""), "NSGA-III", result_hyp_nsgaiii, result_eps_nsgaiii, result_igd_nsgaiii});
 			linhas.add(new String[]{(ec+""), "IBEA", result_hyp_ibea, result_eps_ibea, result_igd_ibea});
-			linhas.add(new String[]{(ec+""), "MOMBI-II", result_hyp_mombi, result_eps_mombi, result_igd_mombi});
+			linhas.add(new String[]{(ec+""), "MOMBI", result_hyp_mombi, result_eps_mombi, result_igd_mombi});
+			linhas.add(new String[]{(ec+""), "MOMBI-II", result_hyp_mombi2, result_eps_mombi2, result_igd_mombi2});
+
 
 			Writer writer = Files.newBufferedWriter(Paths.get("C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\files\\resultados.csv"), StandardOpenOption.APPEND);
 			CSVWriter csvWriter = new CSVWriter(writer, '\t'); 
@@ -200,6 +231,10 @@ public class executar {
 			System.out.println("MOMBI hyp: "+result_hyp_mombi);
 			System.out.println("MOMBI eps: "+result_eps_mombi);
 			System.out.println("MOMBI igd+: "+result_igd_mombi);
+			
+			System.out.println("MOMBI-II hyp: "+result_hyp_mombi2);
+			System.out.println("MOMBI-II eps: "+result_eps_mombi2);
+			System.out.println("MOMBI-II igd+: "+result_igd_mombi2);
 			
 			System.out.println("------------------------------------------");
 		
@@ -248,19 +283,6 @@ public class executar {
 		int low = 0;
 		int result = r.nextInt(high-low) + low;
 		return result;
-	}
-
-	public static void createDotGraph(String dotFormat,String fileName)
-	{
-		GraphViz gv = new GraphViz(cfgProp, TEMP_DIR);
-		gv.addln(gv.start_graph());
-		gv.add(dotFormat);
-		gv.addln(gv.end_graph());
-		String type = "pdf";
-		gv.decreaseDpi();
-		gv.decreaseDpi();
-		File out = new File(fileName+"."+ type); 
-		gv.writeGraphToFile( gv.getGraph( gv.getDotSource(), type ), out );
 	}
 
 

@@ -34,7 +34,7 @@ public class Camila_problema extends AbstractIntegerProblem {
 	private int tamanho_cromossomo = 1000;
 	private int [][] matriz_adjacencia ;
 	private Dicionario dicionario; 
-	private int numero_arestas=0;
+	private double numero_arestas=0;
 
 
 
@@ -146,7 +146,7 @@ public class Camila_problema extends AbstractIntegerProblem {
 			arq.close();
 
 		} catch (IOException e) {
-			System.err.printf("Erro na abertura do arquivo: %s.\n Classe: Window_qt metodo: ler_interface() ",
+			System.err.printf("Erro na abertura do arquivo",
 					e.getMessage());
 		} 
 
@@ -162,7 +162,7 @@ public class Camila_problema extends AbstractIntegerProblem {
 		numero_nos = nos;
 		setNumberOfVariables(tamanho_cromossomo); // seta o tamanho do cromossomo
 		setNumberOfObjectives(3);
-		setName("Camilanator");
+		setName("mestrado");
 
 		List<Integer> lowerLimit = new ArrayList<>(getNumberOfVariables()) ;
 		List<Integer> upperLimit = new ArrayList<>(getNumberOfVariables()) ;
@@ -180,7 +180,7 @@ public class Camila_problema extends AbstractIntegerProblem {
 
 		int custo = 0;
 		int quantidade_coerencia = 1;
-		int arestasCobertas = 0;
+		double arestasCobertas = 0;
 		double fitness1, fitness2, fitness3;
 		
 		fitness1 = 1.0;
@@ -220,6 +220,7 @@ public class Camila_problema extends AbstractIntegerProblem {
 //		fitness2 = (1/faz_sequencia);
 			
 		
+//		System.out.println(solution);
 //		------------------------------Cobertura--------------------------------------------------
 		
 		for (int i = 0; i < matriz_adjacencia.length; i++) {
@@ -233,16 +234,11 @@ public class Camila_problema extends AbstractIntegerProblem {
 			}
 		}
 		
-			
 		fitness3 = 1 -(arestasCobertas/numero_arestas);
 			
 		solution.setObjective(0, fitness1);
 		solution.setObjective(1, fitness2);
 		solution.setObjective(2, fitness3);
-//		System.out.print(" func1: "+fitness1);
-//		System.out.print(" func2: "+fitness2);
-//		System.out.print(" func3: "+fitness3);
-//		System.out.println();
 
 	}
 

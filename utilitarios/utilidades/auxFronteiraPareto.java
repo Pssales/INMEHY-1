@@ -9,6 +9,7 @@ import algoritmos_evolucionarios.IBEA_LLH_IntegerProblem;
 import algoritmos_evolucionarios.MOMBI_LLH_IntegerProblem;
 import algoritmos_evolucionarios.NSGAIII_LLH_IntegerProblem;
 import algoritmos_evolucionarios.NSGAII_LLH_IntegerProblem;
+import algoritmos_evolucionarios.mombi.MOMBI2_LLH_IntegerProblem;
 import dependencias_class.Saida;
 import dependencias_class.SolutionListUtils;
 import dependencias_interfaces.IntegerSolution;
@@ -20,6 +21,7 @@ public class auxFronteiraPareto {
 
 	private List<List<IntegerSolution>> allpopNSGAIII;
 	private List<List<IntegerSolution>> allpopMOMBI;
+	private List<List<IntegerSolution>> allpopMOMBI2;
 	private List<List<IntegerSolution>> allpopIBEA;
 	private ArrayList<IntegerSolution> pfTrueKnown;
 	private List<IntegerSolution> popMOMBI;
@@ -43,6 +45,7 @@ public class auxFronteiraPareto {
 
 		allpopNSGAIII = new ArrayList<List<IntegerSolution>>();
 		allpopMOMBI = new ArrayList<List<IntegerSolution>>();
+		allpopMOMBI2 = new ArrayList<List<IntegerSolution>>();
 		allpopIBEA = new ArrayList<List<IntegerSolution>>();
 		pfTrueKnown = new ArrayList<IntegerSolution>();		
 		popMOMBI = new LinkedList<IntegerSolution>();
@@ -53,7 +56,7 @@ public class auxFronteiraPareto {
 
 	public void gerarFPFinal(int e, int t) throws IOException {
 
-		System.out.println("#HUGS - gerando a Fronteira de Pareto - Integer Problem - so nativos...");
+		System.out.println("Gerando a Fronteira de Pareto - Integer Problem...");
 
 		this.estudo_caso = e;
 		this.trials = t;
@@ -88,6 +91,22 @@ public class auxFronteiraPareto {
 
 		} 
 		System.out.println("NSGAIII");
+		
+		
+		for(int trial = 0; trial < maxTrials; trial++){
+
+			IBEA_LLH_IntegerProblem ibea_nativo = new IBEA_LLH_IntegerProblem(problem, populationSize, crossoverProbability, mutationProbability, operador_crossover, operador_mutacao, numberValidations*populationSize, numberArchievment);
+			try {
+				Saida popIBEA_nativo = ibea_nativo.execute();							   
+				List<IntegerSolution> popnd = SolutionListUtils.getNondominatedSolutions(popIBEA_nativo.getPopulacao_final());
+				allpopIBEA.add(popnd); // terah as 30 pops do NSGA-II
+				pfTrueKnown.addAll(popnd); // para gerar a PFTrueKnown 
+			} catch (Exception eee) {
+				eee.printStackTrace();
+			}
+
+		} 
+		System.out.println("IBEA");
 
 		for(int trial = 0; trial < maxTrials; trial++){
 			MOMBI_LLH_IntegerProblem mombi_nativo = new MOMBI_LLH_IntegerProblem(problem, crossoverProbability, mutationProbability, operador_crossover, operador_mutacao, numberValidations, weight_path);
@@ -104,21 +123,20 @@ public class auxFronteiraPareto {
 		
 		System.out.println("MOMBI");
 
-		
 		for(int trial = 0; trial < maxTrials; trial++){
-
-			IBEA_LLH_IntegerProblem ibea_nativo = new IBEA_LLH_IntegerProblem(problem, populationSize, crossoverProbability, mutationProbability, operador_crossover, operador_mutacao, numberValidations*populationSize, numberArchievment);
+			MOMBI2_LLH_IntegerProblem mombi2_nativo = new MOMBI2_LLH_IntegerProblem(problem, crossoverProbability, mutationProbability, operador_crossover, operador_mutacao, numberValidations, weight_path);
 			try {
-				Saida popIBEA_nativo = ibea_nativo.execute();							   
-				List<IntegerSolution> popnd = SolutionListUtils.getNondominatedSolutions(popIBEA_nativo.getPopulacao_final());
-				allpopIBEA.add(popnd); // terah as 30 pops do NSGA-II
-				pfTrueKnown.addAll(popnd); // para gerar a PFTrueKnown 
+				Saida popMOMBI2_nativo = mombi2_nativo.execute();		   
+				List<IntegerSolution> popnd= SolutionListUtils.getNondominatedSolutions(popMOMBI2_nativo.getPopulacao_final());
+				allpopMOMBI2.add(popnd); // terah as 30 pops do NSGA-II
+				pfTrueKnown.addAll(popnd); // para gerar a PFTrueKnown   
 			} catch (Exception eee) {
 				eee.printStackTrace();
 			}
+		} // #### END 30 TRIAL NSGA-II
+		
+		System.out.println("MOMBI II Nativo finalizado"); 
 
-		} 
-		System.out.println("IBEA");
 
 		
 

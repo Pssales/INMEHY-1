@@ -13,10 +13,10 @@ public class GeradorWeights {
 	public static void main(String args[]) throws IOException{
 		
 		
-		int populationSize = 2000;
-		int dimension = 2;
+		int populationSize = 130;
+		int dimension = 3;
 		double epsilon = 1.0;
-		String caminho = "C:\\Users\\camil\\eclipse-workspace\\jMetal\\resources\\weightVectorFiles\\mombi2\\weight_02D_"+populationSize+"_mombi.sld";
+		String caminho = "C:\\Users\\camil\\eclipse-workspace\\jMetal\\resources\\weightVectorFiles\\mombi2\\weight_03D_"+populationSize+"_mombi.sld";
 		
 		Impressora.getInstance().imprimirArquivo(caminho,"# "+populationSize+" "+dimension+"\n");
 		
