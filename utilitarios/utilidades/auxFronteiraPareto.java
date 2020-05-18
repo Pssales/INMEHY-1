@@ -24,6 +24,7 @@ public class auxFronteiraPareto {
 	private List<List<IntegerSolution>> allpopMOMBI2;
 	private List<List<IntegerSolution>> allpopIBEA;
 	private ArrayList<IntegerSolution> pfTrueKnown;
+	private ArrayList<IntegerSolution> pfTrueKnownFinal;
 	private List<IntegerSolution> popMOMBI;
 
 	private int estudo_caso;
@@ -47,7 +48,8 @@ public class auxFronteiraPareto {
 		allpopMOMBI = new ArrayList<List<IntegerSolution>>();
 		allpopMOMBI2 = new ArrayList<List<IntegerSolution>>();
 		allpopIBEA = new ArrayList<List<IntegerSolution>>();
-		pfTrueKnown = new ArrayList<IntegerSolution>();		
+		pfTrueKnown = new ArrayList<IntegerSolution>();	
+		pfTrueKnownFinal = new ArrayList<IntegerSolution>();		
 		popMOMBI = new LinkedList<IntegerSolution>();
 
 	}
@@ -109,21 +111,6 @@ public class auxFronteiraPareto {
 		System.out.println("IBEA");
 
 		for(int trial = 0; trial < maxTrials; trial++){
-			MOMBI_LLH_IntegerProblem mombi_nativo = new MOMBI_LLH_IntegerProblem(problem, crossoverProbability, mutationProbability, operador_crossover, operador_mutacao, numberValidations, weight_path);
-			try {
-				Saida popMOMBI_nativo = mombi_nativo.execute();						   
-				popMOMBI = SolutionListUtils.getNondominatedSolutions(popMOMBI_nativo.getPopulacao_final());
-				allpopMOMBI.add(popMOMBI); 
-				pfTrueKnown.addAll(popMOMBI);
-			} catch (Exception eee) {
-				eee.printStackTrace();
-			}
-
-		}
-		
-		System.out.println("MOMBI");
-
-		for(int trial = 0; trial < maxTrials; trial++){
 			MOMBI2_LLH_IntegerProblem mombi2_nativo = new MOMBI2_LLH_IntegerProblem(problem, crossoverProbability, mutationProbability, operador_crossover, operador_mutacao, numberValidations, weight_path);
 			try {
 				Saida popMOMBI2_nativo = mombi2_nativo.execute();		   
@@ -142,11 +129,15 @@ public class auxFronteiraPareto {
 
 		pfTrueKnown = (ArrayList<IntegerSolution>) SolutionListUtils.getNondominatedSolutions(pfTrueKnown);
 		String fronteira = "";
-		for(IntegerSolution elemento : pfTrueKnown){
+		pfTrueKnownFinal = (ArrayList<IntegerSolution>) SolutionListUtils.getNondominatedSolutions(pfTrueKnown);
+		
+		for(IntegerSolution elemento : pfTrueKnownFinal){
 			if(!fronteira.contains(elemento.getObjective(0) + " " + elemento.getObjective(1)+ " " +elemento.getObjective(2))) {
 				fronteira = fronteira + elemento.getObjective(0) + " " + elemento.getObjective(1)+ " " +elemento.getObjective(2)+"\n";	
 			}
 		}
+		
+
 		Impressora.getInstance().imprimirArquivo((caminho_saida), fronteira);
 
 	}
