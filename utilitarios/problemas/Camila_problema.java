@@ -17,6 +17,7 @@ import org.uma.jmetal.solution.integersolution.impl.DefaultIntegerSolution;
 
 import dependencias_abstract.AbstractIntegerProblem;
 import dependencias_interfaces.IntegerSolution;
+import utilidades.Impressora;
 
 import java.awt.font.NumericShaper;
 import java.io.*;
@@ -186,6 +187,19 @@ public class Camila_problema extends AbstractIntegerProblem {
 		fitness1 = 1.0;
 		fitness2 = 1.0;
 		fitness3 = 1.0;
+		
+		Random rand = new Random(); //instance of random class
+	      int upperbound = 9000;
+	        //generate random values from 0-24
+	      int int_random = rand.nextInt(upperbound);
+	      if(int_random == 4584) {
+	    	  try {
+	    		  Impressora.getInstance().imprimirArquivo("pareto_fronts\\result.txt", solution.toString());
+	    	  } catch (IOException e) {
+	    		  // TODO Auto-generated catch block
+	    		  e.printStackTrace();
+	    	  }	    	  
+	      }
 //		------------------------------coerencia--------------------------------------------------
 
 		int j = 0;

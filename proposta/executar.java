@@ -1,4 +1,3 @@
-import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
@@ -11,7 +10,6 @@ import java.util.Random;
 import com.opencsv.CSVWriter;
 
 import algoritmos_evolucionarios.IBEA_LLH_IntegerProblem;
-import algoritmos_evolucionarios.MOMBI_LLH_IntegerProblem;
 import algoritmos_evolucionarios.mombi.MOMBI2_LLH_IntegerProblem;
 import algoritmos_evolucionarios.NSGAIII_LLH_IntegerProblem;
 import dependencias_class.ArrayFront;
@@ -28,7 +26,6 @@ import dependencias_interfaces.Front;
 import dependencias_interfaces.IntegerSolution;
 import dependencias_interfaces.Problem;
 import problemas.Camila_problema;
-import utilidades.GraphViz;
 import utilidades.Impressora;
 
 public class executar {
@@ -36,7 +33,7 @@ public class executar {
 	private static String cfgProp = "C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\config.properties"; // graphviz
 	private static String TEMP_DIR = "C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\temp"; //  graphviz
 	
-	private static int estudos_caso =2; // referente a pasta arquivos para leitura. são os dots. uma pasta por dot 
+	private static int estudos_caso =3; // referente a pasta arquivos para leitura. são os dots. uma pasta por dot 
 	private static int maxTrials = 30;
 
 	//arquivos
@@ -58,6 +55,7 @@ public class executar {
 //	private static List<List<IntegerSolution>> allpopMOMBI = new ArrayList<List<IntegerSolution>>();
 	private static List<List<IntegerSolution>> allpopMOMBI2 = new ArrayList<List<IntegerSolution>>();
 	private static List<List<IntegerSolution>> allpopIBEA = new ArrayList<List<IntegerSolution>>();
+
 	private static List<IntegerSolution> pfTrueKnown = new ArrayList<IntegerSolution>();
 	
 	private static List<IntegerSolution> popNSGAIIIFinal = new ArrayList<>();
@@ -70,7 +68,7 @@ public class executar {
 	public static void main(String[] args) throws IOException{
 
 		
-		for(int ec=2; ec<=estudos_caso; ec++){
+		for(int ec=3; ec<=estudos_caso; ec++){
 			
 			String referenceParetoFront = "C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\pareto_fronts\\fronteira_pareto_"+ec+".pf";
 			Front referenceFront = new ArrayFront(referenceParetoFront); 
