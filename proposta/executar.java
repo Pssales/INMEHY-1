@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
@@ -27,6 +29,7 @@ import dependencias_interfaces.IntegerSolution;
 import dependencias_interfaces.Problem;
 import problemas.Camila_problema;
 import utilidades.Impressora;
+import utilidades.SaveFiles;
 
 public class executar {
 
@@ -46,7 +49,7 @@ public class executar {
 	private static int operador_mutacao = 1;
 	private static double crossoverProbability = 0.9;
 	private static double mutationProbability = 0.0125;
-	private static int numberValidations = 1180; 
+	private static int numberValidations = 1130; 
 	private static int numberArchievment = 100;
 	private static String weight_path = "C:\\Users\\camil\\eclipse-workspace\\jMetal\\resources\\weightVectorFiles\\mombi2\\weight_03D_12.sld";
 	////////////////////////////////
@@ -62,9 +65,11 @@ public class executar {
 //	private static List<IntegerSolution> popMOMBIFinal = new ArrayList<>();
 	private static List<IntegerSolution> popMOMBI2Final = new ArrayList<>();
 	private static List<IntegerSolution> popIBEAFinal = new ArrayList<>();
-	
-	
 
+	private static ArrayList<Indicador> indicadoresNSGA = new ArrayList<Indicador>(); 
+	private static ArrayList<Indicador> indicadoresMOMBI2 = new ArrayList<Indicador>(); 
+	private static ArrayList<Indicador> indicadoresIBEA = new ArrayList<Indicador>(); 
+	
 	public static void main(String[] args) throws IOException{
 
 		
@@ -87,14 +92,20 @@ public class executar {
 				try {
 					Saida popNSGAIII_nativo = nsgaiii_nativo.execute();							   
 					List<IntegerSolution> popnd = SolutionListUtils.getNondominatedSolutions(popNSGAIII_nativo.getPopulacao_final());
+//					sFV.saveFunVar(""+trial, "NSGAIII", problem, SolutionListUtils.getNondominatedSolutions(popNSGAIII_nativo.getPopulacao_final()));
 					allpopNSGAIII.add(popnd); // terah as 30 pops do NSGA-III
-					nsgaiii_nativo.limparPopulacao();
 					
+					indicadoresNSGA.add(testefunc(normalizedReferenceFront, referenceFront, frontNormalizer,  allpopNSGAIII));
+					
+					nsgaiii_nativo.limparPopulacao();
+										
 				} catch (Exception eee) {
 					eee.printStackTrace();
 				}
 
 			} // #### END 30 TRIAL NSGA-II
+//			String optimizationSol, String indicatorType, List<Double> indicatorValue, Problem problem
+
 
 			System.out.println("NSGAIII Nativo finalizado");   
 			
@@ -106,6 +117,8 @@ public class executar {
 					Saida popIBEA_nativo = ibea_nativo.execute();							   
 					List<IntegerSolution> popnd = SolutionListUtils.getNondominatedSolutions(popIBEA_nativo.getPopulacao_final());
 					allpopIBEA.add(popnd); // terah as 30 pops do NSGA-II
+					indicadoresIBEA.add(testefunc(normalizedReferenceFront, referenceFront, frontNormalizer,  allpopIBEA));
+
 					pfTrueKnown.addAll(popnd); // para gerar a PFTrueKnown 
 				} catch (Exception eee) {
 					eee.printStackTrace();
@@ -139,6 +152,8 @@ public class executar {
 					Saida popMOMBI2_nativo = mombi2_nativo.execute();		   
 					List<IntegerSolution> popnd= SolutionListUtils.getNondominatedSolutions(popMOMBI2_nativo.getPopulacao_final());
 					allpopMOMBI2.add(popnd); // terah as 30 pops do NSGA-II
+					indicadoresMOMBI2.add(testefunc(normalizedReferenceFront, referenceFront, frontNormalizer,  allpopMOMBI2));
+
 					pfTrueKnown.addAll(popnd); // para gerar a PFTrueKnown   
 				} catch (Exception eee) {
 					eee.printStackTrace();
@@ -240,6 +255,28 @@ public class executar {
 		System.out.println("Fim");
 
 	}
+	
+	public static Indicador testefunc(Front normalizedReferenceFront, Front referenceFront, FrontNormalizer frontNormalizer, List<List<IntegerSolution>> allpop) {
+		List<IntegerSolution> popFinal = new ArrayList<>();
+
+		for(List<IntegerSolution> pop : allpop){  
+			popFinal.addAll(pop);
+		}
+
+		Front normalizedFront = frontNormalizer.normalize(new ArrayFront(popFinal)) ;
+		List<PointSolution> normalizedPopulation = FrontUtils
+				.convertFrontToSolutionList(normalizedFront) ;
+		
+		String result_hyp = new PISAHypervolume<PointSolution>(normalizedReferenceFront).evaluateModificado(normalizedPopulation) + "";
+		String result_eps = new Epsilon<PointSolution>(referenceFront).evaluateModificado(popFinal) + "";
+		String result_igd = new InvertedGenerationalDistancePlus<PointSolution>(normalizedReferenceFront).evaluateModificado(normalizedPopulation) + "";
+		
+		System.out.println("hyp: "+result_hyp);
+		System.out.println("eps: "+result_eps);
+		System.out.println("igd+: "+result_igd);
+		return new Indicador(result_hyp, result_eps, result_igd);
+		
+	}
 
 	public static List<IntegerSolution> adjustPopulation(List<IntegerSolution> pop, int popSize) {
 		List<IntegerSolution> jointPopulation = new ArrayList<>();
@@ -294,6 +331,20 @@ public class executar {
 		popIBEAFinal.clear();
 		
 	}
+	
+	public void saveFileStatEval(String optimizationSol, String indicatorType, List<Double> indicatorValue, Problem problem) throws IOException {
+		 // PS: colocar problem como outro par. String dir = "result/" + optimizationSol + "/" + problem.getName() + "_" + problem.getNumberOfObjectives();
+		 String dir = "result/" + optimizationSol + "/" +  problem.getName() + "_" + problem.getNumberOfObjectives();
+	     new File(dir).mkdirs();
+	     String indicatorFile = dir + "/" + indicatorType + ".tsv";
+	     
+	     FileOutputStream f = new FileOutputStream(indicatorFile);
+	     for (double iV: indicatorValue) {
+	    	 String valueTab = String.valueOf(iV) + "\t";
+	    	 f.write(valueTab.getBytes(), 0, valueTab.length());
+	     }
+	     f.close();
+	 }
 }
 
 
