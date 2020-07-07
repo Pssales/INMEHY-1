@@ -14,6 +14,7 @@ import com.opencsv.CSVWriter;
 import algoritmos_evolucionarios.IBEA_LLH_IntegerProblem;
 import algoritmos_evolucionarios.mombi.MOMBI2_LLH_IntegerProblem;
 import algoritmos_evolucionarios.NSGAIII_LLH_IntegerProblem;
+import algoritmos_evolucionarios.SPEA2_LLH_IntegerProblem;
 import dependencias_class.ArrayFront;
 import dependencias_class.Epsilon;
 import dependencias_class.FrontNormalizer;
@@ -37,7 +38,7 @@ public class executar {
 	private static String TEMP_DIR = "C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\temp"; //  graphviz
 	
 	private static int estudos_caso =3; // referente a pasta arquivos para leitura. são os dots. uma pasta por dot 
-	private static int maxTrials = 30;
+	private static int maxTrials = 20;
 
 	//arquivos
 	private static String referenceParetoFront = "";
@@ -55,20 +56,21 @@ public class executar {
 	////////////////////////////////
 		
 	private static List<List<IntegerSolution>> allpopNSGAIII = new ArrayList<List<IntegerSolution>>();
-//	private static List<List<IntegerSolution>> allpopMOMBI = new ArrayList<List<IntegerSolution>>();
 	private static List<List<IntegerSolution>> allpopMOMBI2 = new ArrayList<List<IntegerSolution>>();
 	private static List<List<IntegerSolution>> allpopIBEA = new ArrayList<List<IntegerSolution>>();
+	private static List<List<IntegerSolution>> allpopSPEA2 = new ArrayList<List<IntegerSolution>>();
 
 	private static List<IntegerSolution> pfTrueKnown = new ArrayList<IntegerSolution>();
 	
 	private static List<IntegerSolution> popNSGAIIIFinal = new ArrayList<>();
-//	private static List<IntegerSolution> popMOMBIFinal = new ArrayList<>();
 	private static List<IntegerSolution> popMOMBI2Final = new ArrayList<>();
 	private static List<IntegerSolution> popIBEAFinal = new ArrayList<>();
+	private static List<IntegerSolution> popSPEA2Final = new ArrayList<>();
 
 	private static ArrayList<Indicador> indicadoresNSGA = new ArrayList<Indicador>(); 
 	private static ArrayList<Indicador> indicadoresMOMBI2 = new ArrayList<Indicador>(); 
 	private static ArrayList<Indicador> indicadoresIBEA = new ArrayList<Indicador>(); 
+	private static ArrayList<Indicador> indicadoresSPEA2 = new ArrayList<Indicador>(); 
 	
 	public static void main(String[] args) throws IOException{
 
@@ -85,6 +87,21 @@ public class executar {
 			Problem<IntegerSolution> problem = new Camila_problema(caminho_projeto+"dots\\"+ec+".dot");
 
 			System.out.println("Rodando algoritmos nativos...");
+			
+//			for(int trial=0; trial<maxTrials; trial++) {
+//		    	SPEA2_LLH_IntegerProblem llh2 = new SPEA2_LLH_IntegerProblem(problem, populationSize, crossoverProbability, mutationProbability, operador_crossover, operador_mutacao, numberValidations);
+//				try {
+//					Saida popSPEA2_nativo = llh2.execute();
+//					List<IntegerSolution> popnd= SolutionListUtils.getNondominatedSolutions(popSPEA2_nativo.getPopulacao_final());
+//					allpopSPEA2.add(popnd); // terah as 30 pops do NSGA-II
+//					indicadoresSPEA2.add(testefunc(normalizedReferenceFront, referenceFront, frontNormalizer,  allpopSPEA2));
+//					
+//				} catch (Exception e){
+//					e.printStackTrace();
+//
+//				}
+//			}
+			
 
 			for(int trial = 0; trial < maxTrials; trial++){
 
@@ -162,6 +179,9 @@ public class executar {
 			
 			System.out.println("MOMBI II Nativo finalizado"); 
 			
+			
+			
+			
 //			-----------------------------------------------------------
 //			Indicadores
 //			-----------------------------------------------------------
@@ -176,12 +196,12 @@ public class executar {
 			
 //			-----------------------------------------------------------			
 			
-//			for(List<IntegerSolution> pop : allpopMOMBI){  
-//				popMOMBIFinal.addAll(pop);
-//			}
-//			Front normalizedFrontMOMBI = frontNormalizer.normalize(new ArrayFront(popMOMBIFinal)) ;
-//			List<PointSolution> normalizedPopulationMOMBI = FrontUtils
-//					.convertFrontToSolutionList(normalizedFrontMOMBI) ;
+			for(List<IntegerSolution> pop : allpopSPEA2){  
+				popSPEA2Final.addAll(pop);
+			}
+			Front normalizedFrontSPEA2 = frontNormalizer.normalize(new ArrayFront(popSPEA2Final)) ;
+			List<PointSolution> normalizedPopulationSPEA2 = FrontUtils
+					.convertFrontToSolutionList(normalizedFrontSPEA2) ;
 //			-----------------------------------------------------------			
 			
 			for(List<IntegerSolution> pop : allpopMOMBI2){  
@@ -210,9 +230,9 @@ public class executar {
 			String result_igd_ibea = new InvertedGenerationalDistancePlus<PointSolution>(normalizedReferenceFront).evaluateModificado(normalizedPopulationIBEA) + "";
 
 
-//			String result_hyp_mombi = new PISAHypervolume<PointSolution>(normalizedReferenceFront).evaluateModificado(normalizedPopulationMOMBI) + "";
-//			String result_eps_mombi = new Epsilon<PointSolution>(referenceFront).evaluateModificado(popMOMBIFinal) + " ";
-//			String result_igd_mombi = new InvertedGenerationalDistancePlus<PointSolution>(normalizedReferenceFront).evaluateModificado(normalizedPopulationMOMBI) + "";
+			String result_hyp_spea2 = new PISAHypervolume<PointSolution>(normalizedReferenceFront).evaluateModificado(normalizedPopulationSPEA2) + "";
+			String result_eps_spea2 = new Epsilon<PointSolution>(referenceFront).evaluateModificado(popSPEA2Final) + " ";
+			String result_igd_spea2 = new InvertedGenerationalDistancePlus<PointSolution>(normalizedReferenceFront).evaluateModificado(normalizedPopulationSPEA2) + "";
 
 			String result_hyp_mombi2 = new PISAHypervolume<PointSolution>(normalizedReferenceFront).evaluateModificado(normalizedPopulationMOMBI2) + "";
 			String result_eps_mombi2 = new Epsilon<PointSolution>(referenceFront).evaluateModificado(popMOMBI2Final) + " ";
@@ -221,7 +241,7 @@ public class executar {
 			List<String[]> linhas = new ArrayList<>();
 			linhas.add(new String[]{(ec+""), "NSGA-III", result_hyp_nsgaiii, result_eps_nsgaiii, result_igd_nsgaiii});
 			linhas.add(new String[]{(ec+""), "IBEA", result_hyp_ibea, result_eps_ibea, result_igd_ibea});
-//			linhas.add(new String[]{(ec+""), "MOMBI", result_hyp_mombi, result_eps_mombi, result_igd_mombi});
+			linhas.add(new String[]{(ec+""), "SPEA2", result_hyp_spea2, result_eps_spea2, result_igd_spea2});
 			linhas.add(new String[]{(ec+""), "MOMBI-II", result_hyp_mombi2, result_eps_mombi2, result_igd_mombi2});
 
 
@@ -241,9 +261,9 @@ public class executar {
 			System.out.println("IBEA eps: "+result_eps_ibea);
 			System.out.println("IBEA igd+: "+result_igd_ibea);
 			
-//			System.out.println("MOMBI hyp: "+result_hyp_mombi);
-//			System.out.println("MOMBI eps: "+result_eps_mombi);
-//			System.out.println("MOMBI igd+: "+result_igd_mombi);
+			System.out.println("SPEA2 hyp: "+result_hyp_spea2);
+			System.out.println("SPEA2 eps: "+result_eps_spea2);
+			System.out.println("SPEA2 igd+: "+result_igd_spea2);
 //			
 			System.out.println("MOMBI-II hyp: "+result_hyp_mombi2);
 			System.out.println("MOMBI-II eps: "+result_eps_mombi2);

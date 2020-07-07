@@ -106,6 +106,8 @@ public class FrontNormalizer {
     
     for (int i = 0; i < front.getNumberOfPoints(); i++) {
       for (int j = 0; j < numberOfPointDimensions; j++) {
+    	  
+    	  System.out.println(maximumValues[j] +" "+ minimumValues[j]);
         if ((maximumValues[j] - minimumValues[j]) == 0) {
           throw new JMetalException("Maximum and minimum values of index " + j + " "
               + "are the same: " + maximumValues[j]);

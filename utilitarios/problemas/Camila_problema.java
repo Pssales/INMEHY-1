@@ -245,10 +245,10 @@ public class Camila_problema extends AbstractIntegerProblem {
 						break;
 					}
 				}
+				fitness3 = fitness3 + (arestasCobertas/numero_arestas);
 			}
 		}
 		
-		fitness3 = 1 -(arestasCobertas/numero_arestas);
 			
 		solution.setObjective(0, fitness1);
 		solution.setObjective(1, fitness2);

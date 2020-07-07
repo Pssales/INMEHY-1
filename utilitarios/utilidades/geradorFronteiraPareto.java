@@ -8,8 +8,8 @@ public class geradorFronteiraPareto {
 	public static void main(String[] args) throws IOException {
 		auxFronteiraPareto pf = new auxFronteiraPareto();
 		
-		for(int i=3; i<=3; i++) {
-			pf.gerarFPFinal(i, 5);
+		for(int i=1; i<=1; i++) {
+			pf.gerarFPFinal(i, 10);
 		}
 	}
 }
