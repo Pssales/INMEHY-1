@@ -1,10 +1,11 @@
 package algoritmos_evolucionarios.mombi.util;
 
 import dependencias_interfaces.Solution;
-import org.uma.jmetal.util.JMetalException;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import dependencias_class.JMetalException;
 
 /**
  * @author Juan J. Durillo

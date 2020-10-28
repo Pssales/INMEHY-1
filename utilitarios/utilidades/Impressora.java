@@ -23,12 +23,18 @@ public class Impressora {
 		private Impressora(){}
 	
 	public void imprimirArquivo(String nome_arquivo, String frase) throws IOException{
-			
 			FileWriter saida = new FileWriter(nome_arquivo, true);
 			PrintWriter gravarArquivo = new PrintWriter(saida);
 			gravarArquivo.print(frase);
 			saida.close();
 			gravarArquivo.close();
 		}
+	
+	public void verifyDiretorio(String diretorio_) {
+		File diretorio = new File(diretorio_);
+		if (!diretorio.exists()) {
+			diretorio.mkdirs();
+		}
+	}
  
 }

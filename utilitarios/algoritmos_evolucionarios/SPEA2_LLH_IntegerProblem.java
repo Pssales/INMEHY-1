@@ -32,6 +32,7 @@ import dependencias_class.PopulationWorks;
 import dependencias_class.RankingAndCrowdingDistanceComparator;
 import dependencias_class.Saida;
 import dependencias_class.SequentialSolutionListEvaluator;
+import dependencias_class.SolutionListUtils;
 import dependencias_class.SolutionSet;
 
 
@@ -120,7 +121,7 @@ public class SPEA2_LLH_IntegerProblem extends AbstractAlgorithmRunner {
 		    List<IntegerSolution> population = algorithm.getResult();
 			
 		    Saida saida = new Saida(population, 0.0, 0.0); 
-			
+		    
 			return saida;
 			
 	 }

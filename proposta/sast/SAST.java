@@ -1,5 +1,7 @@
 package sast;
 
+import static utilidades.SaveFiles.saveFunVar;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
@@ -48,9 +50,10 @@ public class SAST {
 	private static int numberValidations = 1100;  //////// esse e o unico que muda;
 	private static int numberArchievment = populationSize*numberValidations;  //////// esse e o unico que muda;
 	private static String weight_path = "C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\geracao_weight_MOMBI\\weights\\output\\weight_03D_12.sld";
+	
 	public static void main(String[] args) throws IOException, InterruptedException {
 
-		for(int ec=1; ec<=estudos_caso; ec++){
+		for(int ec=2; ec<=estudos_caso; ec++){
 
 			Populacoes popsFinais = Populacoes.getInstance();
 			PFTrueKnown pftrueknown = PFTrueKnown.getInstance();
@@ -59,10 +62,33 @@ public class SAST {
 			System.out.println("#Mestrado - Integer Problem...");
 			//modelo 
 
-			Problem<IntegerSolution> problem = new Camila_problema(caminho_projeto+"dots\\EC\\"+ec+".dot");
+			Problem<IntegerSolution> problem = new Camila_problema(caminho_projeto+"dots\\sast\\"+ec+".dot");
 			int contagem_solucao = 0;
 			System.out.println("#############################");
 			System.out.println("INICIANDO");
+			
+			
+			
+			SolucaoIndividual novo_MOMBI = new SolucaoIndividual();
+			novo_MOMBI.setAlg(algoritmo.mombi);
+			novo_MOMBI.setLlh("");
+			novo_MOMBI.setTrial(maxTrials);
+			for(int trial=0; trial<maxTrials; trial++) {
+				System.out.println("Algoritmo: MOMBI-II Contagem de execuï¿½ï¿½o: "+trial);
+				MOMBI2_LLH_IntegerProblem llh = new MOMBI2_LLH_IntegerProblem(problem, crossoverProbability, mutationProbability, operador_crossover, operador_mutacao, numberValidations, weight_path);
+				Saida popMOMBI = llh.execute();
+				List<IntegerSolution> popMOMBIFinal = SolutionListUtils.getNondominatedSolutions(popMOMBI.getPopulacao_final());
+				novo_MOMBI.addPop(popMOMBIFinal);					
+				pftrueknown.addPop(popMOMBI.getPopulacao_final()); 
+				
+//				saveFunVar(trial, "MOMBI-II",problem,popMOMBI.getPopulacao_final(), ec);
+				
+				popMOMBI.getPopulacao_final().clear();
+				auxiliar.getInstance().limpa();
+			}
+			popsFinais.addAllpopMOMBITodoMundoMesmo(novo_MOMBI);
+			
+			System.out.println("#############################");
 			
 			SolucaoIndividual novo_IBEA = new SolucaoIndividual();
 			novo_IBEA.setAlg(algoritmo.nsgaii);
@@ -70,12 +96,14 @@ public class SAST {
 			novo_IBEA.setTrial(maxTrials);
 			for(int trial=0; trial<maxTrials; trial++) {
 				SolucaoIndividual novo = new SolucaoIndividual();
-				System.out.println("Algoritmo: IBEA Contagem de execução: "+trial);
+				System.out.println("Algoritmo: IBEA Contagem de execuï¿½ï¿½o: "+trial);
 				IBEA_LLH_IntegerProblem llh = new IBEA_LLH_IntegerProblem(problem, populationSize, crossoverProbability, mutationProbability, operador_crossover, operador_mutacao,  populationSize*numberValidations, numberArchievment);
 				Saida popIBEA = llh.execute();
 				List<IntegerSolution> popIBEAFinal = SolutionListUtils.getNondominatedSolutions(popIBEA.getPopulacao_final());
 				novo_IBEA.addPop(popIBEAFinal);					
 				pftrueknown.addPop(popIBEA.getPopulacao_final()); 
+//				saveFunVar(trial, "IBEA",problem,popIBEA.getPopulacao_final(), ec);
+
 				popIBEA.getPopulacao_final().clear();
 				auxiliar.getInstance().limpa();
 			}
@@ -83,34 +111,19 @@ public class SAST {
 
 			
 			System.out.println("#############################");
-			SolucaoIndividual novo_MOMBI = new SolucaoIndividual();
-			novo_MOMBI.setAlg(algoritmo.mombi);
-			novo_MOMBI.setLlh("");
-			novo_MOMBI.setTrial(maxTrials);
-			for(int trial=0; trial<maxTrials; trial++) {
-				System.out.println("Algoritmo: MOMBI-II Contagem de execução: "+trial);
-				MOMBI2_LLH_IntegerProblem llh = new MOMBI2_LLH_IntegerProblem(problem, crossoverProbability, mutationProbability, operador_crossover, operador_mutacao, numberValidations, weight_path);
-				Saida popMOMBI = llh.execute();
-				List<IntegerSolution> popMOMBIFinal = SolutionListUtils.getNondominatedSolutions(popMOMBI.getPopulacao_final());
-				novo_MOMBI.addPop(popMOMBIFinal);					
-				pftrueknown.addPop(popMOMBI.getPopulacao_final()); 
-				popMOMBI.getPopulacao_final().clear();
-				auxiliar.getInstance().limpa();
-			}
-			popsFinais.addAllpopMOMBITodoMundoMesmo(novo_MOMBI);
-			
-			System.out.println("#############################");
 			SolucaoIndividual novo_NSGAIII = new SolucaoIndividual();
 			novo_NSGAIII.setAlg(algoritmo.nsgaiii);
 			novo_NSGAIII.setLlh("");
 			novo_NSGAIII.setTrial(maxTrials);
 			for(int trial=0; trial<maxTrials; trial++) {
-				System.out.println("Algoritmo: NSGA-III Contagem de execução: "+trial);
+				System.out.println("Algoritmo: NSGA-III Contagem de execuï¿½ï¿½o: "+trial);
 				NSGAIII_LLH_IntegerProblem llh3 = new NSGAIII_LLH_IntegerProblem(problem, populationSize, crossoverProbability, mutationProbability, operador_crossover, operador_mutacao, numberValidations);
 				Saida popNSGAIII = llh3.execute();
 				List<IntegerSolution> popNSGAIIIFinal= SolutionListUtils.getNondominatedSolutions(popNSGAIII.getPopulacao_final());
 				novo_NSGAIII.addPop(popNSGAIIIFinal);					
 				pftrueknown.addPop(popNSGAIII.getPopulacao_final()); 
+//				saveFunVar(trial, "NSGA-III",problem,popNSGAIII.getPopulacao_final(), ec);
+
 				popNSGAIII.getPopulacao_final().clear();	
 				auxiliar.getInstance().limpa();
 			}
@@ -122,19 +135,31 @@ public class SAST {
 			novo_SPEA2.setLlh("");
 			novo_SPEA2.setTrial(maxTrials);
 			for(int trial=0; trial<maxTrials; trial++) {
-				System.out.println("Algoritmo: SPEA2 Contagem de execução: "+trial);
+				System.out.println("Algoritmo: SPEA2 Contagem de execuï¿½ï¿½o: "+trial);
 				SPEA2_LLH_IntegerProblem llh2 = new SPEA2_LLH_IntegerProblem(problem, populationSize, crossoverProbability, mutationProbability, operador_crossover, operador_mutacao, numberValidations);
 				Saida popSPEA2 = llh2.execute();
 				List<IntegerSolution> popSPEA2Final= SolutionListUtils.getNondominatedSolutions(popSPEA2.getPopulacao_final());
 				novo_SPEA2.addPop(popSPEA2Final);					
 				pftrueknown.addPop(popSPEA2.getPopulacao_final()); 
+//				saveFunVar(trial, "SPEA-ll",problem,popSPEA2.getPopulacao_final(), ec);
 				popSPEA2.getPopulacao_final().clear();	
 				auxiliar.getInstance().limpa();
 			}
-			popsFinais.addAllpopSPEA2TodoMundoMesmo(novo_MOMBI);
+			popsFinais.addAllpopSPEA2TodoMundoMesmo(novo_SPEA2);
+			
+			String pf = new String();
+			for(IntegerSolution el : pftrueknown.getPftrueknow()) {
+				if (!pf.contains(el.getObjective(0) + "\t" + el.getObjective(1) + "\t" + el.getObjective(2))) {
+					pf = pf + el.getObjective(0) + "\t" + el.getObjective(1) + "\t" + el.getObjective(2) + "\n";
+				}
+			}
+			
+			Impressora.getInstance().imprimirArquivo(("C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\files\\sast"+ec+"_3\\TrueKnownParetoFront.tsv"), pf);
+			
+			pftrueknown.gerarParetoFront();
+			
 			
 
-			pftrueknown.gerarParetoFront();
 			
 			int l = 0;			
 			l=0;
@@ -153,15 +178,15 @@ public class SAST {
 				for(String elemento : solucaoSPEA2_.getIgdPlus()) {
 					result_igd_SPEA2 = result_igd_SPEA2 + elemento + "\t";
 				}
-				for(String elemento : solucaoSPEA2_.getIgdPlus()) {
+				for(String elemento : solucaoSPEA2_.getEpsilon()) {
 					result_eps_SPEA2 = result_eps_SPEA2 + elemento + "\t";
 				}
 				
-				Impressora.getInstance().imprimirArquivo(("C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\files\\TL"+ec+"_3\\SPEA-ll\\SPEA-ll_hypervolume.tsv"), result_hyp_SPEA2);
+				Impressora.getInstance().imprimirArquivo(("C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\files\\sast"+ec+"_3\\SPEA-ll\\SPEA-ll_hypervolume.tsv"), result_hyp_SPEA2);
 				
-				Impressora.getInstance().imprimirArquivo(("C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\files\\TL"+ec+"_3\\SPEA-ll\\SPEA-ll_idgplus.tsv"), result_igd_SPEA2);	
+				Impressora.getInstance().imprimirArquivo(("C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\files\\sast"+ec+"_3\\SPEA-ll\\SPEA-ll_idgplus.tsv"), result_igd_SPEA2);	
 				
-				Impressora.getInstance().imprimirArquivo(("C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\files\\TL"+ec+"_3\\SPEA-ll\\SPEA-ll_epsilon.tsv"), result_eps_SPEA2);
+				Impressora.getInstance().imprimirArquivo(("C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\files\\sast"+ec+"_3\\SPEA-ll\\SPEA-ll_epsilon.tsv"), result_eps_SPEA2);
 				
 			}
 			
@@ -179,16 +204,16 @@ public class SAST {
 				for(String elemento : solucaoMOMBI2_.getIgdPlus()) {
 					result_igd_MOMBI2 = result_igd_MOMBI2 + elemento + "\t";
 				}
-				for(String elemento : solucaoMOMBI2_.getIgdPlus()) {
+				for(String elemento : solucaoMOMBI2_.getEpsilon()) {
 					result_eps_MOMBI2 = result_eps_MOMBI2 + elemento + "\t";
 				}
 				
-				Impressora.getInstance().imprimirArquivo(("C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\files\\TL"+ec+"_3\\MOMBI-II\\MOMBI-II_hypervolume.tsv"), result_hyp_MOMBI2);
+				Impressora.getInstance().imprimirArquivo(("C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\files\\sast"+ec+"_3\\MOMBI-II\\MOMBI-II_hypervolume.tsv"), result_hyp_MOMBI2);
 
 								
-				Impressora.getInstance().imprimirArquivo(("C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\files\\TL"+ec+"_3\\MOMBI-II\\MOMBI-II_idgplus.tsv"), result_igd_MOMBI2);
+				Impressora.getInstance().imprimirArquivo(("C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\files\\sast"+ec+"_3\\MOMBI-II\\MOMBI-II_idgplus.tsv"), result_igd_MOMBI2);
 				
-				Impressora.getInstance().imprimirArquivo(("C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\files\\TL"+ec+"_3\\MOMBI-II\\MOMBI-II_epsilon.tsv"), result_eps_MOMBI2);
+				Impressora.getInstance().imprimirArquivo(("C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\files\\sast"+ec+"_3\\MOMBI-II\\MOMBI-II_epsilon.tsv"), result_eps_MOMBI2);
 				
 			}
 			
@@ -207,16 +232,16 @@ public class SAST {
 				for(String elemento : solucaoNSGAIII_.getIgdPlus()) {
 					result_igd_NSGAIII = result_igd_NSGAIII + elemento + "\t";
 				}
-				for(String elemento : solucaoNSGAIII_.getIgdPlus()) {
+				for(String elemento : solucaoNSGAIII_.getEpsilon()) {
 					result_eps_NSGAIII = result_eps_NSGAIII + elemento + "\t";
 				}
 				
-				Impressora.getInstance().imprimirArquivo(("C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\files\\TL"+ec+"_3\\NSGA-III\\NSGA-III_hypervolume.tsv"), result_hyp_NSGAIII);
+				Impressora.getInstance().imprimirArquivo(("C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\files\\sast"+ec+"_3\\NSGA-III\\NSGA-III_hypervolume.tsv"), result_hyp_NSGAIII);
 
 				
-				Impressora.getInstance().imprimirArquivo(("C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\files\\TL"+ec+"_3\\NSGA-III\\NSGA-III_idgplus.tsv"), result_igd_NSGAIII);
+				Impressora.getInstance().imprimirArquivo(("C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\files\\sast"+ec+"_3\\NSGA-III\\NSGA-III_idgplus.tsv"), result_igd_NSGAIII);
 				
-				Impressora.getInstance().imprimirArquivo(("C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\files\\TL"+ec+"_3\\NSGA-III\\NSGA-III_epsilon.tsv"), result_eps_NSGAIII);
+				Impressora.getInstance().imprimirArquivo(("C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\files\\sast"+ec+"_3\\NSGA-III\\NSGA-III_epsilon.tsv"), result_eps_NSGAIII);
 
 			}
 			
@@ -235,16 +260,16 @@ public class SAST {
 				for(String elemento : solucaoIBEA_.getIgdPlus()) {
 					result_igd_IBEA = result_igd_IBEA + elemento + "\t";
 				}
-				for(String elemento : solucaoIBEA_.getIgdPlus()) {
+				for(String elemento : solucaoIBEA_.getEpsilon()) {
 					result_eps_IBEA = result_eps_IBEA + elemento + "\t";
 				}
 				
-				Impressora.getInstance().imprimirArquivo(("C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\files\\TL"+ec+"_3\\IBEA\\IBEA_hypervolume.tsv"), result_hyp_IBEA);
+				Impressora.getInstance().imprimirArquivo(("C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\files\\sast"+ec+"_3\\IBEA\\IBEA_hypervolume.tsv"), result_hyp_IBEA);
 
 				
-				Impressora.getInstance().imprimirArquivo(("C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\files\\TL"+ec+"_3\\IBEA\\IBEA_idgplus.tsv"), result_igd_IBEA);
+				Impressora.getInstance().imprimirArquivo(("C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\files\\sast"+ec+"_3\\IBEA\\IBEA_idgplus.tsv"), result_igd_IBEA);
 				
-				Impressora.getInstance().imprimirArquivo(("C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\files\\TL"+ec+"_3\\IBEA\\IBEA_epsilon.tsv"), result_eps_IBEA);
+				Impressora.getInstance().imprimirArquivo(("C:\\Users\\camil\\eclipse-workspace\\metaheuristic\\files\\sast"+ec+"_3\\IBEA\\IBEA_epsilon.tsv"), result_eps_IBEA);
 				
 			}
 					

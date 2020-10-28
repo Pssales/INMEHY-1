@@ -38,25 +38,39 @@ public class R2RankingNormalized<S extends Solution<?>> extends R2Ranking<S> {
 
     for (int i = 0; i < this.getUtilityFunctions().getSize(); i++) {
       for (S solution : population) {
+    	  
+    	//System.out.println(solution); 
         R2SolutionData solutionData = this.getAttribute(solution);
         solutionData.alpha = this.getUtilityFunctions().evaluate(solution, i);
+        
+
       }
+      
+     
 
       Collections.sort(
           population,
           new Comparator<S>() {
             @Override
             public int compare(S o1, S o2) {
+            	
               R2RankingAttribute<S> attribute = new R2RankingAttribute<>();
               R2SolutionData data1 = (R2SolutionData) attribute.getAttribute(o1);
               R2SolutionData data2 = (R2SolutionData) attribute.getAttribute(o2);
-
-              if (data1.alpha < data2.alpha) return -1;
-              else if (data1.alpha > data2.alpha) return 1;
-              else return 0;
+            
+              if (data1.alpha < data2.alpha) { 
+            	//  System.out.println("-1");
+            	  return -1;}
+              else if (data1.alpha > data2.alpha) {
+            	//  System.out.println("1");
+            	  return 1;
+              }
+              else { 
+            	//  System.out.println(data1.alpha+" "+data2.alpha);
+            	  return 0;}
             }
           });
-
+   
       int rank = 1;
       for (S p : population) {
         R2SolutionData r2Data = this.getAttribute(p);

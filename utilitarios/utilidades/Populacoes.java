@@ -14,10 +14,10 @@ public class Populacoes {
 	private List<SolucaoIndividual> allpopNSGAIITodoMundoMesmo;
 	private List<SolucaoIndividual> allpopNSGAIIITodoMundoMesmo;
 	private List<SolucaoIndividual> allpopSPEA2TodoMundoMesmo;
-	private List<SolucaoIndividual> allpopHUGSTodoMundoMesmo;
-	private List<SolucaoIndividual> allpopGEMOITOTodoMundoMesmo;
-	private List<SolucaoIndividual> allpopGEMOITOTodoMundoMesmo_HLH;
-	private List<IntegerSolution> popHUGS;
+	private List<SolucaoIndividual> allpopHRISE_RTodoMundoMesmo;
+	private List<SolucaoIndividual> allpopHHCFTodoMundoMesmo;
+	private List<SolucaoIndividual> allpopHRISE_MTodoMundoMesmo;
+	private List<IntegerSolution> popHRISE_R;
 	private String algoritmo;
 
 
@@ -29,10 +29,10 @@ public class Populacoes {
 		allpopNSGAIITodoMundoMesmo = new ArrayList<SolucaoIndividual>();
 		allpopNSGAIIITodoMundoMesmo = new ArrayList<SolucaoIndividual>();
 		allpopSPEA2TodoMundoMesmo = new ArrayList<SolucaoIndividual>();
-		allpopHUGSTodoMundoMesmo = new ArrayList<SolucaoIndividual>();
-		allpopGEMOITOTodoMundoMesmo = new ArrayList<SolucaoIndividual>();
-		allpopGEMOITOTodoMundoMesmo_HLH = new ArrayList<SolucaoIndividual>();
-		popHUGS = new ArrayList<IntegerSolution>();
+		allpopHRISE_RTodoMundoMesmo = new ArrayList<SolucaoIndividual>();
+		allpopHHCFTodoMundoMesmo = new ArrayList<SolucaoIndividual>();
+		allpopHRISE_MTodoMundoMesmo = new ArrayList<SolucaoIndividual>();
+		popHRISE_R = new ArrayList<IntegerSolution>();
 		algoritmo = "";
 	}
 	
@@ -71,7 +71,30 @@ public class Populacoes {
 		allpopSPEA2TodoMundoMesmo.add(novo_1);
 	}
 
+	public void addAllpopHHCFTodoMundoMesmo(SolucaoIndividual popHHCF) {
+		SolucaoIndividual novo_1 = new SolucaoIndividual();
+		novo_1 = popHHCF.clonar();
+		allpopHHCFTodoMundoMesmo.add(novo_1);
+	}
 
+	public void addAllpopHRISE_MTodoMundoMesmo(SolucaoIndividual popHRISE_M) {
+		SolucaoIndividual novo_1 = new SolucaoIndividual();
+		novo_1 = popHRISE_M.clonar();
+		allpopHRISE_MTodoMundoMesmo.add(novo_1);
+		
+	}
+	
+
+	public void addAllpopHRISE_RTodoMundoMesmo(SolucaoIndividual pop_HRISE_R) {
+		// TODO Auto-generated method stub
+		SolucaoIndividual novo_1 = new SolucaoIndividual();
+		novo_1 = pop_HRISE_R.clonar();
+		allpopHRISE_RTodoMundoMesmo.add(novo_1);
+	}
+
+
+
+	
 	public List<SolucaoIndividual> getAllpopIBEATodoMundoMesmo() {
 		return allpopIBEATodoMundoMesmo;
 	}
@@ -119,6 +142,35 @@ public class Populacoes {
 	public void setAlgoritmo(String algoritmo) {
 		this.algoritmo = algoritmo;
 	}
+	
+	public List<SolucaoIndividual> getAllpopHHCFTodoMundoMesmo() {
+		return allpopHHCFTodoMundoMesmo;
+	}
+
+	public void setAllpopHHCFTodoMundoMesmo(List<SolucaoIndividual> allpopHHCFTodoMundoMesmo) {
+		this.allpopHHCFTodoMundoMesmo = allpopHHCFTodoMundoMesmo;
+	}
+
+	public void setAllpopHRISE_MTodoMundoMesmo(List<SolucaoIndividual> allpopHRISE_MTodoMundoMesmo) {
+		this.allpopHRISE_MTodoMundoMesmo = allpopHRISE_MTodoMundoMesmo;
+	}
+
+	public List<SolucaoIndividual> getAllpopHRISE_MTodoMundoMesmo() {
+		return allpopHRISE_MTodoMundoMesmo;
+	}
+	
+	public void setAllpopHRISE_RTodoMundoMesmo(List<SolucaoIndividual> allpopHRISE_RTodoMundoMesmo) {
+		this.allpopHRISE_RTodoMundoMesmo = allpopHRISE_RTodoMundoMesmo;
+	}
+
+	public List<SolucaoIndividual> getAllpopHRISE_RTodoMundoMesmo() {
+		return allpopHRISE_RTodoMundoMesmo;
+	}
+
+
+
+	
+
 
 
 	

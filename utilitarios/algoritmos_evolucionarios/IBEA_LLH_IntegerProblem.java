@@ -63,7 +63,6 @@ public class IBEA_LLH_IntegerProblem extends AbstractAlgorithmRunner {
 			mutationProbability = _mutationProbability;
 			maxEvaluations = _numberValidations;
 			numberArchievment = _numberArchievment;
-			
 	}
 	
 	

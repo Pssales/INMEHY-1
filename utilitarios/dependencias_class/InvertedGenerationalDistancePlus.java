@@ -26,6 +26,7 @@ public class InvertedGenerationalDistancePlus<S extends Solution<?>> extends Gen
 	
 
 	 public BigDecimal evaluateModificado(List<S> solutionList) {
+		 
 	    if (solutionList == null) {
 	      throw new JMetalException("The pareto front approximation is null") ;
 	    }

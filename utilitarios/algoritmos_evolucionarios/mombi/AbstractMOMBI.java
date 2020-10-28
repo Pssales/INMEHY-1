@@ -1,13 +1,13 @@
 package algoritmos_evolucionarios.mombi;
 
 import dependencias_abstract.AbstractGeneticAlgorithm;
+import dependencias_class.JMetalRandom;
 import dependencias_interfaces.CrossoverOperator;
 import dependencias_interfaces.MutationOperator;
 import dependencias_interfaces.SelectionOperator;
+import dependencias_interfaces.Solution;
 import dependencias_interfaces.Problem;
-import org.uma.jmetal.solution.Solution;
 import dependencias_interfaces.SolutionListEvaluator;
-import org.uma.jmetal.util.pseudorandom.JMetalRandom;
 
 import java.util.ArrayList;
 import java.util.List;

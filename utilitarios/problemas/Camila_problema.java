@@ -12,8 +12,6 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 
-import org.apache.commons.io.IOUtils;
-import org.uma.jmetal.solution.integersolution.impl.DefaultIntegerSolution;
 
 import dependencias_abstract.AbstractIntegerProblem;
 import dependencias_interfaces.IntegerSolution;
@@ -113,7 +111,7 @@ public class Camila_problema extends AbstractIntegerProblem {
 							id_componente_1 = dicionario.buscar_a_partir_do_valor(aux);
 
 							conta_componentes = conta_componentes + 1;
-							//	System.out.println("componente 1 "+ id_componente_1);
+//								System.out.println("componente 1 "+ id_componente_1 + " valor: "+ aux);
 							continue;
 
 						}
@@ -121,6 +119,8 @@ public class Camila_problema extends AbstractIntegerProblem {
 						if(conta_componentes==1) {
 
 							id_componente_2 = dicionario.buscar_a_partir_do_valor(aux);
+//							System.out.println("componente 2 "+ id_componente_2 + " valor: "+ aux);
+
 							//	System.out.println("componente 2 "+ id_componente_2+ " " + aux);
 							if(aux.contains("final")){ //substitui pelo temrinal
 								matriz_adjacencia[id_componente_1][id_componente_2] = -1;
@@ -180,7 +180,7 @@ public class Camila_problema extends AbstractIntegerProblem {
 	public void evaluate(IntegerSolution solution){
 
 		int custo = 0;
-		int quantidade_coerencia = 1;
+		int quantidade_coerencia = 0;
 		double arestasCobertas = 0;
 		double fitness1, fitness2, fitness3;
 		
@@ -207,15 +207,13 @@ public class Camila_problema extends AbstractIntegerProblem {
 			j = j + 1;
 			int elemento = solution.getVariableValue(i);
 			int elemento_prox = solution.getVariableValue(j);
-			if(matriz_adjacencia[elemento][elemento_prox]!=0) {
+			if(matriz_adjacencia[elemento][elemento_prox]==0) {
 				quantidade_coerencia = quantidade_coerencia + 1;
 			}
 
 		}
-//		System.out.print("func1: "+quantidade_coerencia);
-		fitness1 = 1/(Math.sqrt(quantidade_coerencia));
-//		fitness1 = fitness1 + (1/quantidade_coerencia);
 
+		fitness1 = quantidade_coerencia;//minimizar
 
 
 //		------------------------------custo--------------------------------------------------
@@ -224,15 +222,25 @@ public class Camila_problema extends AbstractIntegerProblem {
 			j = j + 1;
 			int elemento = solution.getVariableValue(i);
 			int elemento_prox = solution.getVariableValue(j);
-			if(matriz_adjacencia[elemento][elemento_prox]!=0) {
+			if(matriz_adjacencia[elemento][elemento_prox]>0) {
 				custo = custo + matriz_adjacencia[elemento][elemento_prox];
 			}
 
 		}
-//		System.out.print(" func2: "+faz_sequencia);
-		fitness2 = 1/(Math.sqrt(custo));
-//		fitness2 = (1/faz_sequencia);
+		
+		fitness2 = custo;
+		
+//		for(int l=0; l<solution.getNumberOfVariables()-1; l++) {
+//			if(solution.getVariableValue(l) == numero_nos-1) {
+//				custo = custo + 1;
+//			}
+//		} verificar após o sast
+//		contar ocorencias do estado final
+//		contar casos de teste minimizar
+//      quantidade de casos de teste
+
 			
+//		fitness2 = Math.pow(quantidade_coerencia, custo);
 		
 //		System.out.println(solution);
 //		------------------------------Cobertura--------------------------------------------------
@@ -245,11 +253,14 @@ public class Camila_problema extends AbstractIntegerProblem {
 						break;
 					}
 				}
-				fitness3 = fitness3 + (arestasCobertas/numero_arestas);
 			}
 		}
 		
+		fitness3 = 1.0 - (double)(arestasCobertas/numero_arestas);	
 			
+		
+		
+		//System.out.println(fitness1 + " " + fitness2 + " " + fitness3);
 		solution.setObjective(0, fitness1);
 		solution.setObjective(1, fitness2);
 		solution.setObjective(2, fitness3);

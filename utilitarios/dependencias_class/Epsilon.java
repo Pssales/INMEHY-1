@@ -141,9 +141,20 @@ public class Epsilon<S extends Solution<?>> extends GenericIndicator<S> {
   /**
    * Evaluate() method
    *
-   * @param solutionList
+   * @param popFinal_
    * @return
    */
+  
+  
+  
+  public Double evaluatee(List<IntegerSolution> popFinal_) {
+	    if (popFinal_ == null) {
+	      throw new JMetalException("The pareto front approximation list is null") ;
+	    }
+
+	    return epsilon(new ArrayFront(popFinal_), referenceParetoFront);
+	  }
+  
   @Override public Double evaluate(List<S> solutionList) {
     if (solutionList == null) {
       throw new JMetalException("The pareto front approximation list is null") ;

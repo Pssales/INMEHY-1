@@ -144,8 +144,9 @@ public class SolucaoIndividual {
 					.convertFrontToSolutionList(normalizedFront) ;
 			
 			String result_hyp = new PISAHypervolume<PointSolution>(PFTrueKnown.getInstance().getNormalizedReferenceFront()).evaluate(normalizedPopulation) + "";
-			String result_eps = new Epsilon<PointSolution>(PFTrueKnown.getInstance().getNormalizedReferenceFront()).evaluateModificado(popFinal_) + " ";
-			String result_igd = new InvertedGenerationalDistancePlus<PointSolution>(PFTrueKnown.getInstance().getNormalizedReferenceFront()).evaluateModificado(normalizedPopulation) + "";
+			String result_eps = new Epsilon<PointSolution>(PFTrueKnown.getInstance().getNormalizedReferenceFront()).evaluate(normalizedPopulation) + " ";
+//			String result_eps = new Epsilon<PointSolution>(PFTrueKnown.getInstance().getNormalizedReferenceFront()).evaluatee(popFinal_) + " ";
+			String result_igd = new InvertedGenerationalDistancePlus<PointSolution>(PFTrueKnown.getInstance().getNormalizedReferenceFront()).evaluate(normalizedPopulation) + "";
 
 			hypervolume.add(result_hyp);
 			igdPlus.add(result_igd);

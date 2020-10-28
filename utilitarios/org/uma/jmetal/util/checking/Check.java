@@ -1,8 +1,8 @@
 package org.uma.jmetal.util.checking;
 
-import org.uma.jmetal.util.checking.exception.*;
-
 import java.util.Collection;
+
+import dependencias_class.checking.exception.*;
 
 /**
  * Static class for error checking

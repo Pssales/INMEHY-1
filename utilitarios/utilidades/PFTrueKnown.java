@@ -87,6 +87,7 @@ public class PFTrueKnown {
 		for(IntegerSolution elemento : pftrueknowAux) {
 			
 			if(pftrueknow.contains(elemento)==true) { 
+//				System.out.println("lalala");
 				continue;
 			}
 			
