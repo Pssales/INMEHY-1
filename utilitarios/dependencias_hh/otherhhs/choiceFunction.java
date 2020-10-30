@@ -3,7 +3,6 @@ package dependencias_hh.otherhhs;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Scanner;
 
 public class choiceFunction {
 	
@@ -12,12 +11,12 @@ public class choiceFunction {
 	public int getMaxChoiceFunction(double[][] measureMatrix1, int order1,
 			double[][] measureMatrix2, int order2, double[][] measureMatrix3,
 			int order3, 
-			int numberOfMeasurements, int alpha, long[] elapsedTimeArray){//epsilon, igd, hipervolume
+			int numberOfMeasurements, int alpha, long[] elapsedTimeArray){
 		 //choiceFunctionf1 cf1 = new choiceFunctionf1();
 		
 		 /*get f1 of choice function regarding all algorithms*/
 		 choiceFunctionf1 chFunf1 = new choiceFunctionf1();
-		 int[][] CFF1 = chFunf1.choiceFunctionF1(measureMatrix1, order1, measureMatrix2, order2, measureMatrix3, order3, numberOfMeasurements);
+		 int[][] CFF1 = chFunf1.choiceFunctionF1(measureMatrix1, 0, measureMatrix2, 0, measureMatrix3, 1,  numberOfMeasurements);
 		 
 		
 		 long[] CF = new long[measureMatrix1.length];
@@ -54,8 +53,7 @@ public class choiceFunction {
 			 System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Random for CF");
 			 
 		 }
-		System.out.println("Index: " +  maxCFvalue[0][0] );
-		
+		//System.out.println("Index: " +  maxCFvalue[0][0] );
         //System.out.println("Same Score: " + sameScore);
         sameScore.clear();
 		 

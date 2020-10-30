@@ -151,7 +151,6 @@ public SwTestingUtils() {
 	    public static int genIndexSolution(int high){
 	    	Random r = new Random();
 	    	int low = 0;
-	    	//int high = 152;
 	    	int result = r.nextInt(high-low) + low;
 	    	return result;
 	    }
@@ -160,10 +159,9 @@ public SwTestingUtils() {
 	    public static double edgeCoverage(Set<String> allEdges, List<List<String>> simple, List<Integer> solution){
 	    	List<List<String>> allDecisionVariables = new ArrayList<List<String>>(); // It means that each element is a Dec Var = SC = Test Case
 	    	double edgeCov = 0.0;
-	    	// Generates a solution based on the integer indices 
+
 	    	for (int ind: solution){
 	    		allDecisionVariables.add(simple.get(ind));
-	    		//System.out.println("Index COVERAGE: " + ind);
 	    	}
 	    	
 	    	Set<String> coveredEdges = new LinkedHashSet<String>();
@@ -177,52 +175,17 @@ public SwTestingUtils() {
 	    	 int commonEdge = 0;
 	         for (String ce: coveredEdges){
 	         	if (allEdges.contains(ce)) {
-	              	commonEdge++;
-//	              	System.out.println(commonEdge);
-	       
+	              	commonEdge++;     
 	            }
 	         }
-//	         double aa = (double)(commonEdge / (double)allEdges.size());
-//System.out.println(aa +"-----------------"); 
+
 	         edgeCov = (double)(commonEdge /  (double)allEdges.size());
-	         //System.out.println("\n\n Objective 4 - edge cov: " + edgeCov + 
-	         	//	" - allEdges: " + allEdges.size());
-	         
-	    	 //return (double)(100*commonEdge /  (double)allEdges.size());
+
 	    	 
 	    	 return edgeCov;
 	    	 
 	    }
 
-		public static double edgeCoverage(Set<String> allEdges, List<List<String>> simple, IntegerSolution solution) {
-			List<List<String>> allDecisionVariables = new ArrayList<List<String>>(); // It means that each element is a Dec Var = SC = Test Case
-	    	double edgeCov = - 1.0;
-	    	// Generates a solution based on the integer indices 
-	    	for (int i = 0; i < solution.getNumberOfVariables(); i++) {
-				allDecisionVariables.add(simple.get(solution.getVariableValue(i)));
-			}	    	
-	    	
-	    	Set<String> coveredEdges = new LinkedHashSet<String>();
-	    	for (List<String> sc: allDecisionVariables){
-	        	for (int i = 0; i < sc.size() - 1; i++){
-	        		coveredEdges.add("("+sc.get(i)+" : "+sc.get(i+1)+")");
-	           	}
-	        }
-	    	
-	    	 int commonEdge = 0;
-	         for (String ce: coveredEdges){
-	         	if (allEdges.contains(ce)) {
-	              	commonEdge++;
-	            }
-	         }
-	    	
-	        
-	         edgeCov = (double)(commonEdge /  (double)allEdges.size());
-	       
-	    	 
-	    	 return edgeCov;
-		}
-		
 	    public static double executionEffort(List<List<String>> simple, List<Integer> solution){
 	    	double executionEffort = 0.0;
 	    	
@@ -244,13 +207,8 @@ public SwTestingUtils() {
 	       				executionEffort = executionEffort+1;	
 	       			}
 	       		}
-//	        	System.out.println(sc);
-//	        	System.out.println("executionEffort: " + executionEffort);
 	        }
 	    	
-//	    	System.out.println("numberOfTestCases");
-//	    	Scanner a = new Scanner(System.in);
-//	    	a.nextInt();
 	    	return executionEffort;
 	    }
 

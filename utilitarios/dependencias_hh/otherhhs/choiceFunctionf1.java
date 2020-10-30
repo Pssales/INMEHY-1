@@ -185,16 +185,18 @@ public class choiceFunctionf1 {
 	 */
 	public int[][] choiceFunctionF1(double[][] measureMetrix1, int order1,
 			double[][] measureMetrix2, int order2, double[][] measureMetrix3,
-			int order3, int numberOfMeasurements) {
+			int order3, 
+			int numberOfMeasurements) {
 		
 		int numberOfAlgorithms = measureMetrix1.length;
 		int[][] rankOfMeasures = new int[numberOfAlgorithms][numberOfMeasurements + 1];
-		int[][] EPRank = new int[numberOfAlgorithms][2];
-		int[][] IGDPRank = new int[numberOfAlgorithms][2];
+		int[][] AERank = new int[numberOfAlgorithms][2];
+		int[][] RNIRank = new int[numberOfAlgorithms][2];
 		int[][] HVRank = new int[numberOfAlgorithms][2];
+		int[][] UDRank = new int[numberOfAlgorithms][2];
 
-		EPRank = this.rankMeasurement(measureMetrix1, 0);//epsilon
-		IGDPRank = this.rankMeasurement(measureMetrix2, 1);//igdplus
+		AERank = this.rankMeasurement(measureMetrix1, 0);//AE
+		RNIRank = this.rankMeasurement(measureMetrix2, 1);//RNI
 		HVRank = this.rankMeasurement(measureMetrix3, 1);//Hypervolume
 
 		/* get the measurement rank of all algorithms regarding all measures */
@@ -203,8 +205,8 @@ public class choiceFunctionf1 {
 		}
 
 		for (int i = 0; i < numberOfAlgorithms; i++) {
-			rankOfMeasures[i][1] = EPRank[i][1];
-			rankOfMeasures[i][2] = IGDPRank[i][1];
+			rankOfMeasures[i][1] = AERank[i][1];
+			rankOfMeasures[i][2] = RNIRank[i][1];
 			rankOfMeasures[i][3] = HVRank[i][1];
 		}
 		/*Get the frequency of best ranking matrix of all algorithms*/
@@ -224,7 +226,7 @@ public class choiceFunctionf1 {
 		//	System.out.println();
 		//}
 		
-		int[][] choiceFunctionF1Matrix = this.calculateChoiceFunctionf1(freqRank, EPRank);
+		int[][] choiceFunctionF1Matrix = this.calculateChoiceFunctionf1(freqRank, RNIRank);
 		
 		//System.out.println("f1 of CF **************************************************************: ");
 		//for (int k = 0; k < numberOfAlgorithms; k++) {

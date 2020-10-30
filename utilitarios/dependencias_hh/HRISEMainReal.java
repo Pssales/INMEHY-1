@@ -33,6 +33,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -615,9 +616,9 @@ public class HRISEMainReal<S extends Solution<?>> {
               qual = hyp.execute(archive);
               break;
                                 
-          case "igd" :
+          case "igdplus" :
               // IGD: Convergence-Diversity
-              IgdCalculator igd = new IgdCalculator(problem.getNumberOfObjectives(), pf);
+              IgdPlusCalculator igd = new IgdPlusCalculator(problem.getNumberOfObjectives(), pf);
               qual = igd.execute(archive);
               break;
                                
@@ -627,14 +628,17 @@ public class HRISEMainReal<S extends Solution<?>> {
               qual = eps.execute(archive);
               break; 
              
-          case "spread" :
-              // GSPREAD/SPREAD: Diversity
-              SpreadCalculator spread = new SpreadCalculator(problem.getNumberOfObjectives(), pf);
-              qual = spread.execute(archive);
-              break;
+//          case "spread" :
+//              // GSPREAD/SPREAD: Diversity
+//              SpreadCalculator spread = new SpreadCalculator(problem.getNumberOfObjectives(), pf);
+//              qual = spread.execute(archive);
+//              break;
           
           default :
-	          System.out.println("#### Invalid Indicator!");  
+        	  System.out.println(indicator);
+	          System.out.println("#### Invalid Indicator!");
+	          Scanner a = new Scanner(System.in);
+	          int b = a.nextInt();
         }
     	  
         return qual;

@@ -125,6 +125,7 @@ public class QualityIndicatorsRealProblems<S extends Solution<?>> {
 	   // Get all Known PFs
 	   String filepfTrueKnown = " ";
 	   List<S> pfTrueKnown = new ArrayList<>();
+	   System.out.println(allPFKnown.entrySet());
 	   
 	   for(Entry<String, List<S>> onePFKnown : allPFKnown.entrySet()){
 		    System.out.println("Known PF Id: " + onePFKnown.getKey() + " -- Known PF Size: " + onePFKnown.getValue().size()); 

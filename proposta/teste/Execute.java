@@ -19,8 +19,8 @@ import algoritmos_evolucionarios.IBEA_LLH_IntegerProblem;
 import algoritmos_evolucionarios.NSGAIII_LLH_IntegerProblem;
 import algoritmos_evolucionarios.SPEA2_LLH_IntegerProblem;
 import algoritmos_evolucionarios.mombi.MOMBI2_LLH_IntegerProblem;
-import br.inpe.cocte.labac.hrise.main.HHLARILAMainReal;
-import br.inpe.cocte.labac.hrise.util.ProblemsWrapperLARILA;
+//import br.inpe.cocte.labac.hrise.main.HHLARILAMainReal;
+//import br.inpe.cocte.labac.hrise.util.ProblemsWrapperLARILA;
 import br.inpe.cocte.labac.hrise.util.SaveFiles;
 //import br.inpe.cocte.labac.hrise.main.HRISEMainReal;
 //import br.inpe.cocte.labac.hrise.qualityreal.QualityIndicatorsRealProblems;//mudar para o meu projeto
@@ -29,6 +29,7 @@ import dependencias_class.SolutionListUtils;
 import dependencias_hh.HHCFMainReal;
 import dependencias_hh.HRISEMainReal;
 import dependencias_hh.QualityIndicatorsRealProblems;
+import dependencias_hh.util.ProblemsWrapperLARILA;
 import dependencias_interfaces.IntegerSolution;
 import dependencias_interfaces.Problem;
 import problemas.Mestrado_Problem;
@@ -50,7 +51,7 @@ public class Execute {
 	private static String weight_path = caminho_projeto + "geracao_weight_MOMBI\\weights\\output\\weight_03D_12.sld";
 
 	private static int estudos_caso = 1;
-	private static int maxTrials = 2;
+	private static int maxTrials = 1;
 
 //	private static int dimensao_problema = 3;
 	private static int populationSize = 100;
@@ -63,6 +64,8 @@ public class Execute {
 	private static int numberArchievment = populationSize * numberValidations; //////// esse e o unico que muda;
 	private static String name = "sast";
 	private static int passo = 3;
+	
+	public static String dot;
 
 	public static void main(String[] args)
 			throws IOException, InterruptedException, ConfigurationException, JMException, ClassNotFoundException {
@@ -74,9 +77,8 @@ public class Execute {
 
 			System.out.println("#Mestrado - Integer Problem...");
 			// modelo
-
-			Problem<IntegerSolution> problem = new Mestrado_Problem(3,
-					caminho_projeto + "dots\\" + name + "\\" + ec + ".dot");
+			dot = caminho_projeto + "dots\\" + name + "\\" + ec + ".dot";
+			Problem<IntegerSolution> problem = new Mestrado_Problem(3,dot);
 //			Problem<IntegerSolution> problem = new Camila_problema(caminho_projeto+"dots\\"+name+"\\"+ec+".dot");
 //			int contagem_solucao = 0;
 			System.out.println("#############################");
@@ -174,36 +176,18 @@ public class Execute {
 
 // -------------------------------HH----------------------------------
 			String baseDestDir = caminho_projeto + "Des\\Rst\\HRISE\\ResultsExec"; // The main Destination Dir. Change
-																					// it according to your platform.
-//			int maxAllClasses = 1;
-//			String cprob = "gu1-5";
-//
-//			String[] newArgsHHRILA = new String[8];
-//			for (int oneClass = 0; oneClass < maxAllClasses; oneClass++) {
-//				newArgsHHRILA[0] = maxTrials + ""; // Number of Trials
-//				newArgsHHRILA[1] = "10"; // Iterations/LLH
-//				newArgsHHRILA[2] = "-1"; // Seed
-//				newArgsHHRILA[3] = "1"; // Algorithm: HH-RILA (1)
-//				newArgsHHRILA[4] = "GU1-5";
-//				newArgsHHRILA[5] = "3"; // Number of LLHs
-//				newArgsHHRILA[6] = base;
-//				newArgsHHRILA[7] = baseDestDir;
-//				HHLARILAMainReal.main(newArgsHHRILA);
-//				selectedLLHs(Integer.parseInt(newArgsHHRILA[0]), newArgsHHRILA[4], base, baseDestDir);
-//			}
-
-//			SolucaoIndividual novo_HHCF = new SolucaoIndividual();
-//			novo_HHCF.setAlg(algoritmo.HHCF);
-//			novo_HHCF.setLlh("");
-//			novo_HHCF.setTrial(maxTrials);
-//
-//			String[] argsHHCF = { "" + maxTrials, "inmehy", "HH-CF", "1000", "5", base, baseDestDir };
-//			HHCFMainReal HHCF = new HHCFMainReal(problem, maxTrials, populationSize, crossoverProbability,
-//					mutationProbability, operador_crossover, operador_mutacao, numberValidations, argsHHCF);
-//			HHCF.execute(novo_HHCF);
-//			popsFinais.addAllpopHHCFTodoMundoMesmo(novo_HHCF);
+//																					// it according to your platform.
 //			
-//			System.out.println("------------");			
+			SolucaoIndividual novo_HHCF = new SolucaoIndividual();
+			novo_HHCF.setAlg(algoritmo.HHCF);
+			novo_HHCF.setLlh("");
+			novo_HHCF.setTrial(maxTrials);
+//
+			String[] argsHHCF = { "" + maxTrials, "inmehy", "HH-CF", "1000", "5", base, baseDestDir };
+			HHCFMainReal HHCF = new HHCFMainReal(problem, argsHHCF);
+//			HHCF.execute(novo_HHCF);
+			
+			System.out.println("------------");			
 
 			SolucaoIndividual novo_HRISE_M = new SolucaoIndividual();
 			novo_HRISE_M.setAlg(algoritmo.HRISEM);
@@ -245,7 +229,7 @@ public class Execute {
 			pftrueknown.gerarParetoFront();
 //------------------------------Soutions------------------------------
 
-			String[] allAlgs = { "HRISE_M", "HRISE_R" };
+			String[] allAlgs = {"HRISE_M", "HRISE_R", "HH-CF"};
 			QualityIndicatorsRealProblems qualIndReal = QualityIndicatorsRealProblems.getInstance();
 
 			qualIndReal.calculateQualityIndicatorsReal(allAlgs, "inmehy", base, baseDestDir, problem);
@@ -294,82 +278,5 @@ public class Execute {
 		}
 	}
 
-	public static void selectedLLHs(int tr, String probClass, String srDir, String deDir) throws IOException {
-		FileUtils.deleteDirectory(new File("exec"));
-		String dir = srDir + "\\HF_Config_Benchmark\\Results\\HH-RILA\\Iter_10\\run_";
-		int nprob = 5;
 
-		for (int iPr = 0; iPr < nprob; iPr++) {
-			Map<String, Integer> cnQualSel = new LinkedHashMap<String, Integer>();
-			cnQualSel.put("NSGAII", 0);
-			cnQualSel.put("SPEA2", 0);
-			cnQualSel.put("IBEA", 0);
-			String versionHH = "HH-RILA";
-
-			for (int iTrial = 0; iTrial < tr; iTrial++) {
-				Scanner scanner = new Scanner(
-						new File(dir + iTrial + "\\" + probClass + (iPr + 1) + "_eachDPChosenHeuristicList.txt"));
-				List<Integer> tall = new ArrayList<Integer>();
-				while (scanner.hasNextInt()) {
-					tall.add(scanner.nextInt());
-				}
-
-				for (int iFile = 0; iFile < tall.size(); iFile++) {
-					switch (tall.get(iFile)) {
-					case 0: // NSGA-II
-						cnQualSel.put("NSGAII", cnQualSel.get("NSGAII") + 1);
-						break;
-					case 1: // SPEA2
-						cnQualSel.put("SPEA2", cnQualSel.get("SPEA2") + 1);
-						break;
-					case 2: // IBEA
-						cnQualSel.put("IBEA", cnQualSel.get("IBEA") + 1);
-						break;
-					default:
-						System.out.println("Error");
-					}
-				}
-
-			}
-
-			cnQualSel.put("NSGAII", cnQualSel.get("NSGAII") - 3 * tr);
-			cnQualSel.put("SPEA2", cnQualSel.get("SPEA2") - 3 * tr);
-			cnQualSel.put("IBEA", cnQualSel.get("IBEA") - 3 * tr);
-
-			// Calculate the percentage of selected LLHs
-			int cnGenSel = cnQualSel.get("NSGAII") + cnQualSel.get("SPEA2") + cnQualSel.get("IBEA");
-			Map<String, Double> prQualSel = new LinkedHashMap<String, Double>();
-			prQualSel.put("NSGAII", cnQualSel.get("NSGAII") / (double) cnGenSel);
-			prQualSel.put("SPEA2", cnQualSel.get("SPEA2") / (double) cnGenSel);
-			prQualSel.put("IBEA", cnQualSel.get("IBEA") / (double) cnGenSel);
-
-			ProblemsWrapperLARILA pwl = new ProblemsWrapperLARILA(probClass, iPr);
-			String toCSV = pwl.getProblemString() + "_" + pwl.getM() + ",Sel,Psel\n";
-			String[] algName = { "NSGAII", "IBEA", "SPEA2" };
-
-			for (int line = 0; line < algName.length; line++) {
-				toCSV += algName[line] + "," + cnQualSel.get(algName[line]) + "," + prQualSel.get(algName[line]) + "\n";
-
-			}
-
-			SaveFiles.saveToCSV(versionHH, pwl.getProblemString() + "_" + pwl.getM(), toCSV);
-
-			System.out.println(
-					"#### Copying Results: HH-RILA EXEC .......................................................................");
-			copyResultDirectoryRunner(srDir + "\\exec", deDir + "\\EXEC\\");
-
-		} // Problem Instances
-
-	}
-
-	public static void copyResultDirectoryRunner(String sourceDir, String destDir) {
-		File source = new File(sourceDir);
-		File dest = new File(destDir);
-		try {
-			FileUtils.copyDirectory(source, dest);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-	}
 }
