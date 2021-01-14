@@ -99,12 +99,19 @@ public class HRISEMainReal<S extends Solution<?>> {
     double alpha;
     int netaa;
 
+	private int ec;
+	private String name;
+	private String base;
+	private int passo;
 	
-  public HRISEMainReal(Problem<IntegerSolution> problem, int maxTrials,  int _populationSize, Double _crossoverProbability, Double _mutationProbability, int _operador_crossover, int _operador_mutacao, int _numberValidations,  String[] args) throws FileNotFoundException, ConfigurationException, JMException, IOException {
+  public HRISEMainReal(Problem<IntegerSolution> problem, int maxTrials,  int _populationSize, Double _crossoverProbability, Double _mutationProbability, int _operador_crossover, int _operador_mutacao, int _numberValidations,  String[] args, int ec, String name, String base, int passo) throws FileNotFoundException, ConfigurationException, JMException, IOException {
 	  
 	  this.problem = problem;
       this.populationSize = _populationSize; // Population size
-      
+      this.ec = ec;
+	  this.name = name;
+	  this.base = base;
+	  this.passo = passo;
       if (args.length == 9) {
           trials = maxTrials;
           opt = args[1];
@@ -456,7 +463,7 @@ public class HRISEMainReal<S extends Solution<?>> {
           System.out.println("#########");
           
           SaveFiles sFV = new SaveFiles();
-          sFV.saveFunVar(i, versionHH, problem, popFinalHH);
+          sFV.saveFunVar(i, versionHH, problem, popFinalHH, ec, name, base, passo);
    		  qireal.addPFKnown(hhid, popFinalHH);
    		  HRISEMainReal.printResultsAsList(popFinalHH, problem, filepfKnown, true);
    		  

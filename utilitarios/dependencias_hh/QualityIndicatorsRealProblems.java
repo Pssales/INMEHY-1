@@ -102,7 +102,7 @@ public class QualityIndicatorsRealProblems<S extends Solution<?>> {
     }
     
     
-    public void calculateQualityIndicatorsReal(String[] hh, String opt, String srcDir, String destDir, Problem<IntegerSolution> problem2) throws IOException {
+    public void calculateQualityIndicatorsReal(String[] hh, String opt, String srcDir, String destDir, Problem<IntegerSolution> problem2, int ec, String name, int passo) throws IOException {
 	   
 	   int l, m, k;
 	   String problemString, versionHH;
@@ -125,7 +125,7 @@ public class QualityIndicatorsRealProblems<S extends Solution<?>> {
 	   // Get all Known PFs
 	   String filepfTrueKnown = " ";
 	   List<S> pfTrueKnown = new ArrayList<>();
-	   System.out.println(allPFKnown.entrySet());
+	//    System.out.println(allPFKnown.entrySet());
 	   
 	   for(Entry<String, List<S>> onePFKnown : allPFKnown.entrySet()){
 		    System.out.println("Known PF Id: " + onePFKnown.getKey() + " -- Known PF Size: " + onePFKnown.getValue().size()); 
@@ -159,11 +159,11 @@ public class QualityIndicatorsRealProblems<S extends Solution<?>> {
 			       
 			       saveIndicatorsReal(onePop.getValue(), problem, filepfTrueKnown, true);
 			    }  
-			    else {
-			    	System.out.println(versionHH);
-			    	Scanner a = new Scanner(System.in);
-			    	a.nextInt();
-			    }
+//			    else {
+//			    	System.out.println(versionHH);
+//			    	Scanner a = new Scanner(System.in);
+//			    	a.nextInt();
+//			    }
 			    
 		   }
 		  
@@ -174,9 +174,9 @@ public class QualityIndicatorsRealProblems<S extends Solution<?>> {
 	    	
 		  
 		  
-          stind.saveFileStatEval(versionHH, versionHH + "_hypervolume", stind.getAllHypervolume(), problem);
-		  stind.saveFileStatEval(versionHH, versionHH + "_epsilon", stind.getAllEpsilon(), problem);
-		  stind.saveFileStatEval(versionHH, versionHH + "_igdplus", stind.getAllIGDPlus(), problem);
+          stind.saveFileStatEval(versionHH, versionHH + "_hypervolume", stind.getAllHypervolume(), problem, name, ec, passo);
+		  stind.saveFileStatEval(versionHH, versionHH + "_epsilon", stind.getAllEpsilon(), problem, name, ec, passo);
+		  stind.saveFileStatEval(versionHH, versionHH + "_igdplus", stind.getAllIGDPlus(), problem, name, ec, passo);
 		  
 		  
 		  System.out.println("........... Copying Results: Real Quality Indicators ................................................................");

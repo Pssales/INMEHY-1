@@ -360,9 +360,9 @@ public class MetricsUtil<S extends Solution<?>> {
             for (int i = 0; i < populations.length; i++) {
                 contributions[i] = 0;
             }
-            for (int i = 0; i < populations.length; i++) {
-                System.out.println(contributions[i]);
-            }
+            // for (int i = 0; i < populations.length; i++) {
+            //     System.out.println(contributions[i]);
+            // }
             return contributions;
         }
 

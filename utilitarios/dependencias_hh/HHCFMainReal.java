@@ -48,6 +48,9 @@ import dependencias_interfaces.Algorithm;
 import dependencias_interfaces.IntegerSolution;
 import dependencias_interfaces.Problem;
 import dependencias_interfaces.Solution;
+
+import static utilidades.SaveFiles.saveFunVar;
+
 //import org.uma.jmetal.algorithm.Algorithm;
 //import org.uma.jmetal.problem.Problem;
 //import org.uma.jmetal.solution.Solution;
@@ -68,10 +71,16 @@ import dependencias_interfaces.Solution;
  * @author Valdivino Alexandre de Santiago Júnior
  */
 public class HHCFMainReal<S extends Solution<?>> {
-
+	private int ec;
+	private String name;
+	private String base;
+	private int passo;
 	
-  public HHCFMainReal(Problem<IntegerSolution> problem, String[] argspar) throws FileNotFoundException, ConfigurationException, JMException, IOException {
-	
+  public HHCFMainReal(Problem<IntegerSolution> problem, String[] argspar, int ec, String name, String base, int passo) throws FileNotFoundException, ConfigurationException, JMException, IOException {
+	  this.ec = ec;
+	  this.name = name;
+	  this.base = base;
+	  this.passo = passo;
 	  this.mainHHCFReal(problem, argspar);
   }
   
@@ -322,7 +331,9 @@ public class HHCFMainReal<S extends Solution<?>> {
           popFinalHH = popHandler.generateNonDominated(popFinalHH, problem);
                     
           SaveFiles sFV = new SaveFiles();
-   		  sFV.saveFunVar(i, versionHH, problem, popFinalHH);
+   		  sFV.saveFunVar(i, versionHH, problem, popFinalHH, ec, name, base, passo);
+   		  
+
    		  qireal.addPFKnown(hhid, popFinalHH);
  		  HHCFMainReal.printResultsAsList(popFinalHH, problem, true, popSizeFinal, 0, filepfKnown);
    		    

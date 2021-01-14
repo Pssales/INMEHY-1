@@ -37,10 +37,17 @@ public class SaveFiles<S extends Solution<?>> {
 	}
 	
 	
-public void saveFunVar(int i, String algName, Problem problem, List<S> archive ) {
+public void saveFunVar(int i, String algName, Problem problem, List<S> archive, int ec, String name, String base , int passo) {
 		
-		String dir = "result/" + algName + "/" + problem.getName() + "_" + problem.getNumberOfObjectives();
-        new File(dir).mkdirs();
+		File diretorio = new File(base+"\\files\\"+name+""+ec+"_"+passo+"\\" + algName + "\\" + problem.getName() + "_" + problem.getNumberOfObjectives());
+		if (!diretorio.exists()) {
+			diretorio.mkdirs();
+		} else {
+			System.out.println("Diret�rio j� existente");
+		}
+//		String dir = "result/" + algName + "/" + problem.getName() + "_" + problem.getNumberOfObjectives();
+		String dir = base+"\\files\\"+name+""+ec+"_"+passo+"\\" + algName + "\\"	+ problem.getName() + "_" + problem.getNumberOfObjectives();
+
         String funFile = dir + "/FUN" + i + ".tsv";
         String varFile = dir + "/VAR" + i + ".tsv";
         //System.err.println(alg.getClass().getCanonicalName() + " " + funFile);

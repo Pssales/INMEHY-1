@@ -51,7 +51,7 @@ public class Execute {
 	private static String weight_path = caminho_projeto + "geracao_weight_MOMBI\\weights\\output\\weight_03D_12.sld";
 
 	private static int estudos_caso = 1;
-	private static int maxTrials = 1;
+	private static int maxTrials = 3;
 
 //	private static int dimensao_problema = 3;
 	private static int populationSize = 100;
@@ -62,8 +62,9 @@ public class Execute {
 	private static double mutationProbability = 0.0125;
 	private static int numberValidations = 20; //////// esse e o unico que muda;
 	private static int numberArchievment = populationSize * numberValidations; //////// esse e o unico que muda;
-	private static String name = "sast";
-	private static int passo = 3;
+	
+	private static String name = "point";
+	private static int passo = 4;
 	
 	public static String dot;
 
@@ -99,8 +100,8 @@ public class Execute {
 				novo_MOMBI.addPop(popMOMBIFinal);
 				pftrueknown.addPop(popMOMBI.getPopulacao_final());
 
-				saveFunVar(trial, "MOMBI-II", problem, popMOMBI.getPopulacao_final(), ec, name, base);
-
+				saveFunVar(trial, "MOMBI-II", problem, popMOMBI.getPopulacao_final(), ec, name, base, passo);
+//				saveFunVar(trial, "MOMBI-II", problem, popMOMBI.getPopulacao_final());
 				popMOMBI.getPopulacao_final().clear();
 				auxiliar.getInstance().limpa();
 			}
@@ -123,7 +124,8 @@ public class Execute {
 						.getNondominatedSolutions(popIBEA.getPopulacao_final());
 				novo_IBEA.addPop(popIBEAFinal);
 				pftrueknown.addPop(popIBEA.getPopulacao_final());
-				saveFunVar(trial, "IBEA", problem, popIBEA.getPopulacao_final(), ec, name, base);
+				saveFunVar(trial, "IBEA", problem, popIBEA.getPopulacao_final(), ec, name, base,passo);
+//				saveFunVar(trial, "IBEA", problem, popIBEA.getPopulacao_final());
 
 				popIBEA.getPopulacao_final().clear();
 				auxiliar.getInstance().limpa();
@@ -145,7 +147,8 @@ public class Execute {
 						.getNondominatedSolutions(popNSGAIII.getPopulacao_final());
 				novo_NSGAIII.addPop(popNSGAIIIFinal);
 				pftrueknown.addPop(popNSGAIII.getPopulacao_final());
-				saveFunVar(trial, "NSGA-III", problem, popNSGAIII.getPopulacao_final(), ec, name, base);
+				saveFunVar(trial, "NSGA-III", problem, popNSGAIII.getPopulacao_final(), ec, name, base, passo);
+//				saveFunVar(trial, "NSGA-III", problem, popNSGAIII.getPopulacao_final());
 
 				popNSGAIII.getPopulacao_final().clear();
 				auxiliar.getInstance().limpa();
@@ -167,7 +170,9 @@ public class Execute {
 						.getNondominatedSolutions(popSPEA2.getPopulacao_final());
 				novo_SPEA2.addPop(popSPEA2Final);
 				pftrueknown.addPop(popSPEA2.getPopulacao_final());
-				saveFunVar(trial, "SPEA-II", problem, popSPEA2.getPopulacao_final(), ec, name, base);
+				saveFunVar(trial, "SPEA-II", problem, popSPEA2.getPopulacao_final(), ec, name, base, passo);
+//				saveFunVar(trial, "SPEA-II", problem, popSPEA2.getPopulacao_final());
+
 				popSPEA2.getPopulacao_final().clear();
 				auxiliar.getInstance().limpa();
 			}
@@ -184,7 +189,7 @@ public class Execute {
 			novo_HHCF.setTrial(maxTrials);
 //
 			String[] argsHHCF = { "" + maxTrials, "inmehy", "HH-CF", "1000", "5", base, baseDestDir };
-			HHCFMainReal HHCF = new HHCFMainReal(problem, argsHHCF);
+			HHCFMainReal HHCF = new HHCFMainReal(problem, argsHHCF , ec, name, base, passo);
 //			HHCF.execute(novo_HHCF);
 			
 			System.out.println("------------");			
@@ -197,7 +202,7 @@ public class Execute {
 			String[] newArgsHRISEMAJ = { maxTrials + "", "inmehy", "HRISE_M", "1000", "7", "1.0", "2", base,
 					baseDestDir };
 			HRISEMainReal HRISE_M = new HRISEMainReal(problem, maxTrials, populationSize, crossoverProbability,
-					mutationProbability, operador_crossover, operador_mutacao, numberValidations, newArgsHRISEMAJ);
+					mutationProbability, operador_crossover, operador_mutacao, numberValidations, newArgsHRISEMAJ, ec, name, base, passo);
 			HRISE_M.execute(novo_HRISE_M);
 //			popsFinais.addAllpopHRISE_MTodoMundoMesmo(novo_HRISE_M);
 //			
@@ -210,7 +215,7 @@ public class Execute {
 			String[] newArgsHRISERES = { maxTrials + "", "inmehy", "HRISE_R", "1000", "7", "0.1", "3", base,
 					baseDestDir };
 			HRISEMainReal HRISE_R = new HRISEMainReal(problem, maxTrials, populationSize, crossoverProbability,
-					mutationProbability, operador_crossover, operador_mutacao, numberValidations, newArgsHRISERES);
+					mutationProbability, operador_crossover, operador_mutacao, numberValidations, newArgsHRISERES, ec, name, base, passo);
 			HRISE_R.execute(novo_HRISE_R);
 //			popsFinais.addAllpopHRISE_RTodoMundoMesmo(novo_HRISE_R);
 
@@ -224,7 +229,7 @@ public class Execute {
 			}
 
 			Impressora.getInstance().imprimirArquivo(
-					(caminho_projeto + "files\\" + name + "" + ec + "_3\\TrueKnownParetoFront.tsv"), pf);
+					(caminho_projeto + "files\\" + name + "" + ec + "_"+passo+"\\TrueKnownParetoFront.tsv"), pf);
 
 			pftrueknown.gerarParetoFront();
 //------------------------------Soutions------------------------------
@@ -232,7 +237,7 @@ public class Execute {
 			String[] allAlgs = {"HRISE_M", "HRISE_R", "HH-CF"};
 			QualityIndicatorsRealProblems qualIndReal = QualityIndicatorsRealProblems.getInstance();
 
-			qualIndReal.calculateQualityIndicatorsReal(allAlgs, "inmehy", base, baseDestDir, problem);
+			qualIndReal.calculateQualityIndicatorsReal(allAlgs, "inmehy", base, baseDestDir, problem, ec, name,passo);
 
 			calculaIndicadores(popsFinais.getAllpopSPEA2TodoMundoMesmo(), ec, "SPEA-II", name, passo);
 			calculaIndicadores(popsFinais.getAllpopMOMBITodoMundoMesmo(), ec, "MOMBI-II", name, passo);

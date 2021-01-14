@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dependencias_interfaces.Problem;
+import utilidades.Impressora;
 
 //import org.uma.jmetal.problem.Problem;
 
@@ -77,11 +78,16 @@ public class StatEvalSupport implements Serializable {
 		 this.igdplus.clear();
 	 }
 	 
-	 public void saveFileStatEval(String optimizationSol, String indicatorType, List<Double> indicatorValue, Problem problem) throws IOException {
+	 public void saveFileStatEval(String optimizationSol, String indicatorType, List<Double> indicatorValue, Problem problem, String name, int ec, int passo) throws IOException {
 		 // PS: colocar problem como outro par. String dir = "result/" + optimizationSol + "/" + problem.getName() + "_" + problem.getNumberOfObjectives();
-		 String dir = "result/" + optimizationSol + "/" +  problem.getName() + "_" + problem.getNumberOfObjectives();
-	     new File(dir).mkdirs();
-	     String indicatorFile = dir + "/" + indicatorType + ".tsv";
+		 Impressora.getInstance()
+			.verifyDiretorio("files\\" + name + "" + ec + "_" + passo + "\\" + optimizationSol);
+
+		 
+		 
+		 String indicatorFile = "files\\" + name + "" + ec + "_" + passo+ "\\" + optimizationSol + "\\" + optimizationSol + "_"+indicatorType+".tsv";
+			
+//		 String indicatorFile = dir + "/" + indicatorType + ".tsv";
 	     
 	     FileOutputStream f = new FileOutputStream(indicatorFile);
 	     //ObjectOutputStream out = new ObjectOutputStream(f);

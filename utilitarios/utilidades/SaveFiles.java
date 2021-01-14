@@ -5,10 +5,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-import dependencias_abstract.Problem;
 import dependencias_class.DefaultFileOutputContext;
 import dependencias_class.SolutionListOutput;
 import dependencias_interfaces.IntegerSolution;
+import dependencias_interfaces.Problem;
 import dependencias_interfaces.Solution;
 
 public class SaveFiles<S extends Solution<?>> {
@@ -17,17 +17,17 @@ public class SaveFiles<S extends Solution<?>> {
 
 	}
 
-	public static void saveFunVar(int trial, String algName, dependencias_interfaces.Problem<IntegerSolution> problem,
-			List<IntegerSolution> archive, int ec, String name, String base) {
+	public static void saveFunVar(int trial, String algName, Problem<IntegerSolution> problem,
+			List<IntegerSolution> archive, int ec, String name, String base, int passo) {
 
-		File diretorio = new File(base+"\\files\\"+name+""+ec+"_3\\" + algName + "\\" + problem.getName() + "_" + problem.getNumberOfObjectives());
+		File diretorio = new File(base+"\\files\\"+name+""+ec+"_"+passo+"\\" + algName + "\\" + problem.getName() + "_" + problem.getNumberOfObjectives());
 		if (!diretorio.exists()) {
 			diretorio.mkdirs();
 		} else {
 			System.out.println("Diret�rio j� existente");
 		}
 
-		String dir = base+"\\files\\"+name+""+ec+"_3\\" + algName + "\\"	+ problem.getName() + "_" + problem.getNumberOfObjectives();
+		String dir = base+"\\files\\"+name+""+ec+"_"+passo+"\\" + algName + "\\"	+ problem.getName() + "_" + problem.getNumberOfObjectives();
 		new File(dir).mkdirs();
 		String funFile = dir + "\\FUN" + trial + ".tsv";
 		String varFile = dir + "\\VAR" + trial + ".tsv";
@@ -37,7 +37,7 @@ public class SaveFiles<S extends Solution<?>> {
 				.setVarFileOutputContext(new DefaultFileOutputContext(varFile)).print();
 	}
 
-	public void saveFunVar(int i, String algName, Problem problem, List<S> archive) {
+	public static void saveFunVar(int i, String algName, Problem<IntegerSolution> problem, List<IntegerSolution> archive) {
 
 		String dir = "result/" + algName + "/" + problem.getName() + "_" + problem.getNumberOfObjectives();
 		new File(dir).mkdirs();
