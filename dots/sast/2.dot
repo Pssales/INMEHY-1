@@ -45,6 +45,7 @@ bool_uValido_novoU_verificaIdade_38->verificaIdade_74;
 return_76->bool_uValido_novoU_verificaIdade_38;
 return_79->bool_uValido_novoU_verificaIdade_38;
 inicializa_54->usuario_usuario_55;
+if_57->inicializa_54;
 novaConta_inicializa_novoU_100_40->inicializa_54;
 Erro_na_Cria_o_da_Conta_58->novaConta_inicializa_novoU_100_40;
 deposita_61->saldo_saldo_valor_62;

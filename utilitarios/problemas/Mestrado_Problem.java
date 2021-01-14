@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.security.AllPermission;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.jgrapht.Graph;
+import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.GraphWalk;
@@ -20,11 +22,15 @@ import org.jgrapht.io.ComponentNameProvider;
 import org.jgrapht.io.DOTExporter;
 import org.jgrapht.io.ExportException;
 import org.jgrapht.io.GraphExporter;
+
+
 import org.jgrapht.alg.cycle.CycleDetector;
 import org.jgrapht.alg.shortestpath.*;
 
 import dependencias_abstract.AbstractIntegerProblem;
 import dependencias_interfaces.IntegerSolution;
+import problemas.graph.AllPaths;
+import problemas.graph.Digraph;
 import utilidades.HawickJamesSimpleCycles;
 import utilidades.SwTestingUtils;
 
@@ -60,10 +66,13 @@ public class Mestrado_Problem extends AbstractIntegerProblem{
 	        System.out.println("#### PROBLEM INSTANCE (Inside): " + getName());
 	        
 	     // Initial Vertices (States) gui1.
-	        String[] initStates = {"main_35"};
+	        String[] initStates = {"_const_string_te_gm_point_sm_typename_point_1"};
 	        // Instantiate the Graph
 	        Graph<String, DefaultEdge> directedGraph = new DefaultDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
 	        // Create the Vertices 
+	        
+			Digraph g= new Digraph();
+
 
 	        try {
 				//			stripDuplicatesFromFile(caminho_dot);
@@ -79,14 +88,15 @@ public class Mestrado_Problem extends AbstractIntegerProblem{
 
 
 					if(!linha.contains("->") && !linha.contains("{") && !linha.contains("}")){
-						if(nos == 0) {
-					       initStates[0] = linha;
-						}
 						nos = nos + 1;
 				        directedGraph.addVertex(linha);
+				        if(nos == 0) {
+				        	initStates[0] = linha;
+				        }
 					} else if(linha.contains("->")){
 						arestas = arestas + 1;
 						directedGraph.addEdge(linha.split("->")[0], linha.split("->")[1]);
+						g.addEdge(linha.split("->")[0], linha.split("->")[1]);
 					}
 
 					linha = lerArq.readLine();
@@ -110,9 +120,9 @@ public class Mestrado_Problem extends AbstractIntegerProblem{
 	       
 	        for(String dv: allVertices) {
 	     	   //System.out.println(dv);
-	     	   if (!(Arrays.stream(initStates).anyMatch(dv::equals))) {
-	     		   terminalVertices.add(dv);
-	     	   }
+//	     	   if (!(Arrays.stream(initStates).anyMatch(dv::equals))) {
+//	     		   terminalVertices.add(dv);
+//	     	   }
 	     	   
 	     	   if(dv.contains("final") ) {
 		     		  terminalVertices.add(dv);
@@ -131,6 +141,7 @@ public class Mestrado_Problem extends AbstractIntegerProblem{
 	     	   
 	     	  }
 	        }
+	        
 	        System.out.println("antes: "+directedGraph.edgeSet().size());
 	        System.out.println(terminalVertices.size());
 	        for (String tver: terminalVertices) {
@@ -166,24 +177,26 @@ public class Mestrado_Problem extends AbstractIntegerProblem{
 	                return url.toString();
 	            }
 	        };
-	    
+	        
+	        
+	        	    
+	        
+//	        ChinesePostman cp = new ChinesePostman();
+//	        cp.getCPPSolution(directedGraph);
+//	        GraphWalk stringcp  = (GraphWalk)cp.getCPPSolution(directedGraph);
+//			this.simpleCircuits.add(stringcp.getVertexList());
+		    
+	        ArrayList<List<String>>ArrayListpaths = new ArrayList<List<String>>();
 
-//	        verify
-	        AllDirectedPaths a = new AllDirectedPaths(directedGraph);
-//System.out.println(allEdges.size());
-//System.out.println(arestas);
-	        for (Iterator iterator = terminal.iterator(); iterator.hasNext();) {
-				allPaths =  a.getAllPaths(initStates[0], iterator.next(), false, allEdges.size());
-//				allPaths =  a.getAllPaths(initStates[0], iterator.next(), false, maximumSimpleCircuits);this.allEdgesSt
+	        ArrayListpaths = AllPaths.getAllPaths(g, initStates[0], "final");
+	  	    for (List<String> list : ArrayListpaths) {
+	  	    	GraphWalk gw = new GraphWalk(directedGraph, list,10.0)	;
+				this.simpleCircuits.add(gw.getVertexList());
 			}
-
-	        for (Iterator iterator =  allPaths.iterator();iterator.hasNext();) {
-				GraphWalk string =  (GraphWalk) iterator.next();
-//				System.out.println(string.getVertexList());
-				this.simpleCircuits.add(string.getVertexList());
-			}
-   
-	        //System.out.println("\n\n----- REVERSED VERTICES -----  \n\n");
+	  	    
+	  	    System.out.println(this.simpleCircuits);
+	        	        
+	        
 	        for (List<String> scr: this.simpleCircuits){
 	        	//System.out.println(sc);
 	        	scr.add(0, scr.get(scr.size() - 1)); // add last vertex
@@ -226,17 +239,17 @@ public class Mestrado_Problem extends AbstractIntegerProblem{
 			e.printStackTrace();
 		}
         
-        
-        
-        try {
-			fx[2] = SwTestingUtils.testCaseDiversity(this.simpleCircuits, varInt, 0.5); // Test Case Diversity - GW/Dice (min)
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
         fx[1] = SwTestingUtils.executionEffort(this.simpleCircuits, varInt);
+        
+        fx[2] = 1.0 - SwTestingUtils.edgeCoverage(this.allEdgesSt, this.simpleCircuits, varInt); // Edge Coverage (max) as a min problem
+        
+//        try {
+//			fx[3] = SwTestingUtils.testCaseDiversity(this.simpleCircuits, varInt, 0.5); // Test Case Diversity - GW/Dice (min)
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 
-//        fx[2] = 1.0 - SwTestingUtils.edgeCoverage(this.allEdgesSt, this.simpleCircuits, varInt); // Edge Coverage (max) as a min problem
                 
         
         solution.setObjective(0, fx[0]);

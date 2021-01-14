@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="windows-1252" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2021-01-14T19:08:58.366395200Z</date>
+  <millis>1610651338366</millis>
+  <nanos>395200</nanos>
+  <sequence>10</sequence>
+  <logger>dependencias_class.JMetalLogger</logger>
+  <level>INFO</level>
+  <class>dependencias_class.JMetalLogger</class>
+  <method>configureLoggers</method>
+  <thread>1</thread>
+  <message>Loggers configured with null</message>
+</record>
+<record>
+  <date>2021-01-14T19:08:58.516938400Z</date>
+  <millis>1610651338516</millis>
+  <nanos>938400</nanos>
+  <sequence>11</sequence>
+  <logger>dependencias_class.JMetalLogger</logger>
+  <level>SEVERE</level>
+  <class>dependencias_class.JMetalException</class>
+  <method>&lt;init&gt;</method>
+  <thread>1</thread>
+  <message>Exception when calling method getFileWriter()</message>
+  <exception>
+    <message>java.io.FileNotFoundException: C:\Users\camil\eclipse-workspace\metaheuristic\files\point1_4\HH-CF\INMEHY_3\FUN0.tsv (O sistema não pode encontrar o caminho especificado)</message>
+    <frame>
+      <class>java.io.FileOutputStream</class>
+      <method>open0</method>
+    </frame>
+    <frame>
+      <class>java.io.FileOutputStream</class>
+      <method>open</method>
+      <line>292</line>
+    </frame>
+    <frame>
+      <class>java.io.FileOutputStream</class>
+      <method>&lt;init&gt;</method>
+      <line>235</line>
+    </frame>
+    <frame>
+      <class>java.io.FileOutputStream</class>
+      <method>&lt;init&gt;</method>
+      <line>124</line>
+    </frame>
+    <frame>
+      <class>dependencias_class.DefaultFileOutputContext</class>
+      <method>getFileWriter</method>
+      <line>31</line>
+    </frame>
+    <frame>
+      <class>dependencias_class.SolutionListOutput</class>
+      <method>printObjectivesToFile</method>
+      <line>91</line>
+    </frame>
+    <frame>
+      <class>dependencias_class.SolutionListOutput</class>
+      <method>print</method>
+      <line>62</line>
+    </frame>
+    <frame>
+      <class>dependencias_hh.util.SaveFiles</class>
+      <method>saveFunVar</method>
+      <line>52</line>
+    </frame>
+    <frame>
+      <class>dependencias_hh.HHCFMainReal</class>
+      <method>mainHHCFReal</method>
+      <line>334</line>
+    </frame>
+    <frame>
+      <class>dependencias_hh.HHCFMainReal</class>
+      <method>&lt;init&gt;</method>
+      <line>84</line>
+    </frame>
+    <frame>
+      <class>teste.Execute</class>
+      <method>main</method>
+      <line>192</line>
+    </frame>
+  </exception>
+</record>
+</log>

@@ -78,5 +78,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="/HRISE-DiscreteReal"/>
+	<classpathentry kind="lib" path="C:/Users/camil/eclipse-workspace/mestrado-xml/lib/jgrapht-bundle-1.4.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
