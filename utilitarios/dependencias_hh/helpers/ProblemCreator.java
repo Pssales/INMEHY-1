@@ -267,7 +267,7 @@ public class ProblemCreator {
             case "YOU1":
                 return getYOU1(problemIndex);  
             case "inmehy":
-            	return (Problem) new Mestrado_Problem(m, caminho);
+            	return (Problem) new Mestrado_Problem(m, caminho,"TLTimePeriod",1);
             default:
                 return null;
         }

@@ -85,7 +85,7 @@ public class StatEvalSupport implements Serializable {
 
 		 
 		 
-		 String indicatorFile = "files\\" + name + "" + ec + "_" + passo+ "\\" + optimizationSol + "\\" + optimizationSol + "_"+indicatorType+".tsv";
+		 String indicatorFile = "files\\" + name + "" + ec + "_" + passo+ "\\" + optimizationSol + "\\" + indicatorType+".tsv";
 			
 //		 String indicatorFile = dir + "/" + indicatorType + ".tsv";
 	     

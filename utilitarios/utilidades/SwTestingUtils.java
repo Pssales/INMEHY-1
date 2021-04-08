@@ -1,5 +1,6 @@
 package utilidades;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -186,7 +187,7 @@ public SwTestingUtils() {
 	    	 
 	    }
 
-	    public static double executionEffort(List<List<String>> simple, List<Integer> solution){
+	    public static double executionEffort(List<List<String>> simple, List<Integer> solution) throws IOException{
 	    	double executionEffort = 0.0;
 	    	
 	    	List<List<String>> allDecisionVariables = new ArrayList<List<String>>(); // It means that each element is a Dec Var = SC = 

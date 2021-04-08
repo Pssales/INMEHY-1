@@ -8,7 +8,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Scanner;
 
 import org.apache.commons.io.FileUtils;
 
@@ -17,12 +16,9 @@ import org.apache.commons.io.FileUtils;
 //import br.inpe.cocte.labac.hrise.util.SaveFiles;
 //import dependencias_hh.jhelper.util.ProblemFactory;
 import dependencias_hh.jhelper.util.metrics.EpsilonCalculator;
-import dependencias_hh.jhelper.util.metrics.EpsilonPlusCalculator;
 import dependencias_hh.jhelper.util.metrics.HypervolumeCalculator;
-import dependencias_hh.jhelper.util.metrics.IgdCalculator;
 import dependencias_hh.jhelper.util.metrics.IgdPlusCalculator;
-import dependencias_hh.jhelper.util.metrics.SpreadCalculator;
-import dependencias_hh.jhelper.util.metrics.UDMetricHandler;
+
 import dependencias_hh.util.PopulationHandler;
 import dependencias_hh.util.ProblemsWrapper;
 import dependencias_hh.util.SaveFiles;
@@ -95,9 +91,7 @@ public class QualityIndicatorsRealProblems<S extends Solution<?>> {
     
     
     public void clearAllPFKnown() {
-    	System.out.println("limpo");
-//    	Scanner a = new Scanner(System.in);
-//    	a.nextInt();
+
     	this.allPFKnown.clear();
     }
     
@@ -179,10 +173,7 @@ public class QualityIndicatorsRealProblems<S extends Solution<?>> {
 		  stind.saveFileStatEval(versionHH, versionHH + "_igdplus", stind.getAllIGDPlus(), problem, name, ec, passo);
 		  
 		  
-		  System.out.println("........... Copying Results: Real Quality Indicators ................................................................");
-		  copyDirectory(srcDir + "/result",
-					            destDir + "/ALLRES/" + problem.getName() + "_" + problem.getNumberOfObjectives());
-		  
+		  System.out.println("........... Copying Results: Real Quality Indicators ................................................................");  
 		  		  
 		  stind.clearAllIndicatorsStatEval();
 		}  

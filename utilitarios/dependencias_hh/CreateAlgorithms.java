@@ -71,7 +71,7 @@ public class CreateAlgorithms<S extends Solution<?>> {
 		        pmxswap.setCrossoverProbality(0.9);
 		        pmxswap.setCrossoverName("sbxIntegerCrossover");
 		        pmxswap.setMutationDistribution(20);
-		        pmxswap.setMutationProbability(1.0 / problem.getNumberOfVariables());
+		        pmxswap.setMutationProbability(0.0125);
 		        pmxswap.setMutationName("integerPolynomialMutation");
 		        
 		        //the same parameter as maashi

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import utilidades.Impressora;
 
@@ -29,6 +30,18 @@ public class Impressora {
 			saida.close();
 			gravarArquivo.close();
 		}
+	public void salveTestCase(String dir, String nome_arquivo, List<String> frase) throws IOException{
+		
+		File diretorio = new File("casos_teste\\"+dir);
+		if (!diretorio.exists()) {
+			diretorio.mkdirs();
+		}
+		FileWriter saida = new FileWriter("casos_teste\\"+dir+"\\"+nome_arquivo, true);
+		PrintWriter gravarArquivo = new PrintWriter(saida);
+		gravarArquivo.print(frase);
+		saida.close();
+		gravarArquivo.close();
+	}
 	
 	public void verifyDiretorio(String diretorio_) {
 		File diretorio = new File(diretorio_);

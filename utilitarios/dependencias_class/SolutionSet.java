@@ -425,7 +425,6 @@ public class SolutionSet implements Serializable {
     	
       union.add(this.get(i));
     } // for
-   // System.out.println("lala");
     for (int i = this.size(); i < (this.size() + solutionSet.size()); i++) {
       union.add(solutionSet.get(i-this.size()));
     } // for

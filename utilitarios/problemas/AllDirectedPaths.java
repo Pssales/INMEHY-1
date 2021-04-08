@@ -34,7 +34,7 @@ import java.util.*;
 public class AllDirectedPaths<V, E>
 {
     private final Graph<V, E> graph;
-    private int maxzise = 1000;
+    private int maxzise = 3000;
 
     /**
      * Create a new instance.

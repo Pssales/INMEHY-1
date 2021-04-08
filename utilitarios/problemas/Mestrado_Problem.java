@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Set;
 
 import org.jgrapht.Graph;
@@ -32,6 +33,7 @@ import dependencias_interfaces.IntegerSolution;
 import problemas.graph.AllPaths;
 import problemas.graph.Digraph;
 import utilidades.HawickJamesSimpleCycles;
+import utilidades.Impressora;
 import utilidades.SwTestingUtils;
 
 public class Mestrado_Problem extends AbstractIntegerProblem{
@@ -48,7 +50,7 @@ public class Mestrado_Problem extends AbstractIntegerProblem{
       private Set<String> terminalVertices = new LinkedHashSet<String>();
 
 	  
-	  public  Mestrado_Problem(int m, String caminho) {
+	  public  Mestrado_Problem(int m, String caminho, String instancia,int ec) {
 		// TODO Auto-generated constructor stub
 		  	setNumberOfVariables(10); // Configuration More: 10 decision variables = simple circuits = test cases
 	        setNumberOfObjectives(m); 
@@ -66,7 +68,7 @@ public class Mestrado_Problem extends AbstractIntegerProblem{
 	        System.out.println("#### PROBLEM INSTANCE (Inside): " + getName());
 	        
 	     // Initial Vertices (States) gui1.
-	        String[] initStates = {"_const_string_te_gm_point_sm_typename_point_1"};
+	        String[] initStates = {"main_2"};
 	        // Instantiate the Graph
 	        Graph<String, DefaultEdge> directedGraph = new DefaultDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
 	        // Create the Vertices 
@@ -88,11 +90,12 @@ public class Mestrado_Problem extends AbstractIntegerProblem{
 
 
 					if(!linha.contains("->") && !linha.contains("{") && !linha.contains("}")){
-						nos = nos + 1;
 				        directedGraph.addVertex(linha);
 				        if(nos == 0) {
 				        	initStates[0] = linha;
+				        	System.out.println(linha);
 				        }
+				        nos = nos + 1;
 					} else if(linha.contains("->")){
 						arestas = arestas + 1;
 						directedGraph.addEdge(linha.split("->")[0], linha.split("->")[1]);
@@ -119,10 +122,6 @@ public class Mestrado_Problem extends AbstractIntegerProblem{
 	        Set<String> terminal = new LinkedHashSet<String>();
 	       
 	        for(String dv: allVertices) {
-	     	   //System.out.println(dv);
-//	     	   if (!(Arrays.stream(initStates).anyMatch(dv::equals))) {
-//	     		   terminalVertices.add(dv);
-//	     	   }
 	     	   
 	     	   if(dv.contains("final") ) {
 		     		  terminalVertices.add(dv);
@@ -141,9 +140,7 @@ public class Mestrado_Problem extends AbstractIntegerProblem{
 	     	   
 	     	  }
 	        }
-	        
-	        System.out.println("antes: "+directedGraph.edgeSet().size());
-	        System.out.println(terminalVertices.size());
+	      
 	        for (String tver: terminalVertices) {
 	     	   
 	     	   for (int i = 0; i < initStates.length; i++) {
@@ -151,7 +148,7 @@ public class Mestrado_Problem extends AbstractIntegerProblem{
 	     	  }
 	     	   
 	        }
-	        System.out.println("depois: "+directedGraph.edgeSet().size());
+	        
 	                        
 	        
 	        Set<DefaultEdge> allEdges = directedGraph.edgeSet();
@@ -180,11 +177,26 @@ public class Mestrado_Problem extends AbstractIntegerProblem{
 	        
 	        
 	        	    
-	        
-//	        ChinesePostman cp = new ChinesePostman();
-//	        cp.getCPPSolution(directedGraph);
-//	        GraphWalk stringcp  = (GraphWalk)cp.getCPPSolution(directedGraph);
-//			this.simpleCircuits.add(stringcp.getVertexList());
+	        //Verificar se melhora ou não
+	        ChinesePostman cp = new ChinesePostman();
+	        GraphWalk stringcp  = (GraphWalk)cp.getCPPSolution(directedGraph);
+			this.simpleCircuits.add(stringcp.getVertexList());
+			
+			ArrayList<String> cpList = new ArrayList<String>();
+
+			
+			for (String string : (List<String>)stringcp.getVertexList()) {
+				cpList.add(string);
+				
+				if(string.equals("final") && cpList.size() >1) {
+					this.simpleCircuits.add((List<String>)cpList.clone());
+					cpList.clear();
+				}else if (string.equals("final") && cpList.size() == 1){
+					cpList.clear();
+				}
+				
+			}
+			// final verificação
 		    
 	        ArrayList<List<String>>ArrayListpaths = new ArrayList<List<String>>();
 
@@ -193,15 +205,26 @@ public class Mestrado_Problem extends AbstractIntegerProblem{
 	  	    	GraphWalk gw = new GraphWalk(directedGraph, list,10.0)	;
 				this.simpleCircuits.add(gw.getVertexList());
 			}
-	  	    
-	  	    System.out.println(this.simpleCircuits);
-	        	        
+	  	    	        	        
 	        
-	        for (List<String> scr: this.simpleCircuits){
-	        	//System.out.println(sc);
-	        	scr.add(0, scr.get(scr.size() - 1)); // add last vertex
-	        	Collections.reverse(scr);
-	        }
+//	        for (List<String> scr: this.simpleCircuits){ //pq precisa disso?
+//	        	//System.out.println(sc);
+//	        	scr.add(0, scr.get(scr.size() - 1)); // add last vertex
+//	        	Collections.reverse(scr);
+//	        }
+	        
+	        for (int i = 0; i < this.simpleCircuits.size(); i++) {
+	        	try {
+					Impressora.getInstance().salveTestCase(instancia+"_"+ec,""+i, this.simpleCircuits.get(i));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+	
+	        
+	      //salvar caso de teste
 	        		   
 	        System.out.println("#### Number of Vertices: " + directedGraph.vertexSet().size() + " and " + "Edges: " + allEdgesSt.size()) ;
 	        /*
@@ -211,7 +234,6 @@ public class Mestrado_Problem extends AbstractIntegerProblem{
 	        
 	        
 	        for (int i = 0; i < getNumberOfVariables(); i++) {
-
 	            lowerLimit.add(0);
 	            upperLimit.add((this.simpleCircuits.size() - 1)); // It depends on the number of SC, Test Case
 	            
@@ -220,6 +242,7 @@ public class Mestrado_Problem extends AbstractIntegerProblem{
 	        System.out.println(this.simpleCircuits.size());
 	        setLowerLimit(lowerLimit);
 	        setUpperLimit(upperLimit);
+	 
 	}
 	
 	@Override
@@ -239,7 +262,12 @@ public class Mestrado_Problem extends AbstractIntegerProblem{
 			e.printStackTrace();
 		}
         
-        fx[1] = SwTestingUtils.executionEffort(this.simpleCircuits, varInt);
+        try {
+			fx[1] = SwTestingUtils.executionEffort(this.simpleCircuits, varInt);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         
         fx[2] = 1.0 - SwTestingUtils.edgeCoverage(this.allEdgesSt, this.simpleCircuits, varInt); // Edge Coverage (max) as a min problem
         

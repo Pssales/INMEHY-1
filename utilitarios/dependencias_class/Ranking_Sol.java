@@ -64,7 +64,6 @@ public class Ranking_Sol {
    */       
   public Ranking_Sol(SolutionSet solutionSet) { 
 	  
-	  System.out.println("lalalalala"); 
 	    
     solutionSet_ = solutionSet ;
 
@@ -112,7 +111,6 @@ public class Ranking_Sol {
       }            
     }
     */
-    System.out.println("lelelelele"); 
 	
     //-> Fast non dominated sorting algorithm
     // Contribution of Guillaume Jacquenot
@@ -123,13 +121,10 @@ public class Ranking_Sol {
       dominateMe[p] = 0;
     }
     for (int p = 0; p < (solutionSet_.size()-1); p++) {
-    	System.out.println("to aki");
       // For all q individuals , calculate if p dominates q or vice versa
       for (int q = p+1; q < solutionSet_.size(); q++) {
-    	System.out.println("to akiiii");
         flagDominate =constraint_.compare(solutionSet.get(p),solutionSet.get(q));
         if (flagDominate == 0) {
-        	System.out.println("to akiiiiiiiiiiiii");
             	
           flagDominate =dominance_.compare(solutionSet.get(p),solutionSet.get(q));
         }
@@ -146,10 +141,7 @@ public class Ranking_Sol {
       }
       // If nobody dominates p, p belongs to the first front
     }
-    
-
-    System.out.println("lilililili"); 
-    
+        
     for (int p = 0; p < solutionSet_.size(); p++) {
       if (dominateMe[p] == 0) {
         front[0].add(p);
@@ -177,7 +169,6 @@ public class Ranking_Sol {
     }
     //<-
     
-    System.out.println("lololololo"); 
 	
     ranking_ = new SolutionSet[i];
     //0,1,2,....,i-1 are front, then i fronts

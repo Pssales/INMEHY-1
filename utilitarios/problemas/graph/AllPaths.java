@@ -62,7 +62,7 @@ public class AllPaths {
 	        path.push(from);
 	        onPath.add(from);
 
-	        if(paths.size() > 100) {
+	        if(paths.size() > 10000) {
 	        	return;
 	        }
 	        // found path from s to t - currently prints in reverse order because of stack

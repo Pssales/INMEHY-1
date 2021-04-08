@@ -137,7 +137,7 @@ public class ChinesePostman<V, E>
             }
         }
         MatchingAlgorithm.Matching<V, DefaultWeightedEdge> matching =
-            new KolmogorovWeightedPerfectMatching<>(auxGraph).getMatching();
+            new KolmogorovMinimumWeightPerfectMatching<>(auxGraph).getMatching();
 
         // 4. On the original graph, add shortcuts between the odd vertices. These shortcuts have
         // been
@@ -229,6 +229,8 @@ public class ChinesePostman<V, E>
             for (Integer j : postImbalancedPartition) {
                 V u = duplicateMap.get(i);
                 V v = duplicateMap.get(j);
+//                System.out.println("v: "+v);
+//                System.out.println("u: "+u);
                 Graphs.addEdge(auxGraph, i, j, shortestPaths.get(new Pair<>(u, v)).getWeight());
             }
         }

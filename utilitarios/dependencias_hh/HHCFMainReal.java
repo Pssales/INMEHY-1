@@ -29,6 +29,8 @@ import javax.management.JMException;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.io.FileUtils;
 
+import dependencias_class.Saida;
+import dependencias_class.SolutionListUtils;
 //import br.inpe.cocte.labac.hrise.jhelper.util.metrics.HypervolumeCalculator;
 import dependencias_hh.jhelper.util.ProblemFactory;
 import dependencias_hh.jhelper.util.metrics.AlgorithmEffortCalculator;
@@ -48,6 +50,7 @@ import dependencias_interfaces.Algorithm;
 import dependencias_interfaces.IntegerSolution;
 import dependencias_interfaces.Problem;
 import dependencias_interfaces.Solution;
+import utilidades.PFTrueKnown;
 
 import static utilidades.SaveFiles.saveFunVar;
 
@@ -76,7 +79,7 @@ public class HHCFMainReal<S extends Solution<?>> {
 	private String base;
 	private int passo;
 	
-  public HHCFMainReal(Problem<IntegerSolution> problem, String[] argspar, int ec, String name, String base, int passo) throws FileNotFoundException, ConfigurationException, JMException, IOException {
+	public HHCFMainReal(Problem<IntegerSolution> problem, String[] argspar, int ec, String name, String base, int passo) throws FileNotFoundException, ConfigurationException, JMException, IOException {
 	  this.ec = ec;
 	  this.name = name;
 	  this.base = base;
@@ -123,6 +126,7 @@ public class HHCFMainReal<S extends Solution<?>> {
         	srcDir = "NONE";
       	    destDir = "NONE";
             System.out.println("#### Invalid Number of Arguments!");
+            System.exit(0);
         }
         
         /*
@@ -141,6 +145,7 @@ public class HHCFMainReal<S extends Solution<?>> {
         StatEvalSupport stindic = StatEvalSupport.getInstance(); // Record and save the indicators for the statistical evaluation
         String filepfKnown;
         String hhid = " ";
+        
         QualityIndicatorsRealProblems qireal = QualityIndicatorsRealProblems.getInstance(); 
         
         for (int i = 0; i < trials; i++) { // ******* BEGIN -> TRIALS *******
@@ -178,13 +183,27 @@ public class HHCFMainReal<S extends Solution<?>> {
  	    		 long executionTimein = System.currentTimeMillis() -  startTimein;
  	    		 executionTimeArray[cllh] = executionTimein;
  	    		 List resultin = (List) algin.getResult();
-                 List<S> popHin = resultin;
+ 	    		 
+ 	    		 PFTrueKnown pftrueknown = PFTrueKnown.getInstance();
+ 	    		 Saida saida = new Saida(resultin, 0.0, 0.0); 
+ 	    		 List<IntegerSolution> popFinal = SolutionListUtils
+						.getNondominatedSolutions(saida.getPopulacao_final());
+				 pftrueknown.addPop(saida.getPopulacao_final());
+
+				 List<S> popHin = resultin;
                  popsInit.add(popHin);
                  pfKnown.addAll(popHin);
+                 
                  if (cntOnlyIni > 0) {
-                   pfKnown = popHandler.generateNonDominated(pfKnown, problem);
+ 					for (IntegerSolution pf : pftrueknown.getPftrueknow()) {
+ 						pfKnown.add((S) pf);
+ 					}
+     				
+                     pfKnown = popHandler.generateNonDominated(pfKnown, problem);
                  }
                  pfKnown = popHandler.removeRepeatedSolutionsInteger(pfKnown);
+                 
+                 
                  filepfKnown = "pareto_fronts_known/"+
                  		 versionHH+"."+problem.getName()+"."+problem.getNumberOfObjectives()+"D.t_"+i+".dp_"+cntOnlyIni+
                  		 ".pf";
