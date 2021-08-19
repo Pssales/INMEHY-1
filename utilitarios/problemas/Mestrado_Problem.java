@@ -177,10 +177,8 @@ public class Mestrado_Problem extends AbstractIntegerProblem{
 	        
 	        
 	        	    
-	        //Verificar se melhora ou não
 	        ChinesePostman cp = new ChinesePostman();
 	        GraphWalk stringcp  = (GraphWalk)cp.getCPPSolution(directedGraph);
-			this.simpleCircuits.add(stringcp.getVertexList());
 			
 			ArrayList<String> cpList = new ArrayList<String>();
 
@@ -196,7 +194,6 @@ public class Mestrado_Problem extends AbstractIntegerProblem{
 				}
 				
 			}
-			// final verificação
 		    
 	        ArrayList<List<String>>ArrayListpaths = new ArrayList<List<String>>();
 
@@ -206,12 +203,6 @@ public class Mestrado_Problem extends AbstractIntegerProblem{
 				this.simpleCircuits.add(gw.getVertexList());
 			}
 	  	    	        	        
-	        
-//	        for (List<String> scr: this.simpleCircuits){ //pq precisa disso?
-//	        	//System.out.println(sc);
-//	        	scr.add(0, scr.get(scr.size() - 1)); // add last vertex
-//	        	Collections.reverse(scr);
-//	        }
 	        
 	        for (int i = 0; i < this.simpleCircuits.size(); i++) {
 	        	try {
